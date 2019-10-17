@@ -1,0 +1,38 @@
+{
+  "name": "solid-realworld",
+  "version": "0.0.0",
+  "description": "A Solid Implementation of the Realworld Example App",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "rollup -w -c",
+    "build": "rollup -c --environment production",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryansolid/solid-realworld.git"
+  },
+  "keywords": [
+    "Solid",
+    "Realworld",
+    "example"
+  ],
+  "author": "Ryan Carniato",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ryansolid/solid-realworld/issues"
+  },
+  "homepage": "https://github.com/ryansolid/solid-realworld#readme",
+  "devDependencies": {
+    "@babel/core": "7.6.2",
+    "@babel/plugin-syntax-dynamic-import": "7.2.0",
+    "babel-preset-solid": "0.1.1",
+    "rollup": "1.22.0",
+    "rollup-plugin-babel": "4.3.3",
+    "rollup-plugin-clear": "^2.0.7",
+    "rollup-plugin-node-resolve": "5.2.0",
+    "rollup-plugin-serve": "^1.0.1",
+    "rollup-plugin-terser": "5.1.2",
+    "solid-js": "0.11.4"
+  }
+}
