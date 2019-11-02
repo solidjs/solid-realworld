@@ -7,5 +7,5 @@ export default function createRouteHandler(init) {
     locationHandler = () => setLocation(window.location.hash.slice(2));
   window.addEventListener("hashchange", locationHandler);
   onCleanup(() => window.removeEventListener("hashchange", locationHandler));
-  return { match: match => match === location() };
+  return { match: match => match === location(), getParams: () => {} };
 }

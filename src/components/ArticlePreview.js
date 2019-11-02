@@ -1,4 +1,8 @@
 import { useStore } from "../store";
+import NavLink from "./NavLink";
+
+const FAVORITED_CLASS = 'btn btn-sm btn-primary';
+const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary';
 
 export default ({ article }) => {
   const [ArticlesStore] = useStore("article");
@@ -15,39 +19,37 @@ export default ({ article }) => {
   return (
     <div class="article-preview">
       <div class="article-meta">
-        <Link to={`/@${article.author.username}`}>
+        <NavLink to={`/@${article.author.username}`}>
           <img src={article.author.image} alt="" />
-        </Link>
+        </NavLink>
 
         <div class="info">
-          <Link class="author" to={`/@${article.author.username}`}>
+          <NavLink class="author" to={`/@${article.author.username}`}>
             {article.author.username}
-          </Link>
-          <span class="date">
-          {new Date(article.createdAt).toDateString()}
-        </span>
+          </NavLink>
+          <span class="date">{new Date(article.createdAt).toDateString()}</span>
         </div>
 
         <div class="pull-xs-right">
           <button
-            class={(article.favorited ? FAVORITED_CLASS : NOT_FAVORITED_CLASS)}
+            class={article.favorited ? FAVORITED_CLASS : NOT_FAVORITED_CLASS}
             onClick={handleClickFavorite}
           >
-            <i class="ion-heart" /> {(article.favoritesCount)}
+            <i class="ion-heart" /> {article.favoritesCount}
           </button>
         </div>
       </div>
 
-      <Link to={`/article/${article.slug}`} class="preview-link">
+      <NavLink to={`/article/${article.slug}`} class="preview-link">
         <h1>{article.title}</h1>
         <p>{article.description}</p>
         <span>Read more...</span>
-        <ul class="tag-list">{
-          article.tagList.map(tag =>
-            <li class="tag-default tag-pill tag-outline">{tag}</li>
-          )
-        }</ul>
-      </Link>
+        <ul class="tag-list">
+          <For each={article.tagList}>
+            {tag => <li class="tag-default tag-pill tag-outline">{tag}</li>}
+          </For>
+        </ul>
+      </NavLink>
     </div>
   );
-}
+};

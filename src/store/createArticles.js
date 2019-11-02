@@ -45,7 +45,7 @@ export default function createArticles(agent) {
         setState({ isLoading: true });
         try {
           const { articles, articlesCount } = await store.$req();
-          articlesRegistry = articles.reduce((memo, article) => {
+          const articlesRegistry = articles.reduce((memo, article) => {
             memo[article.slug] = article;
             return memo;
           }, {});

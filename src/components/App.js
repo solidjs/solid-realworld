@@ -9,7 +9,7 @@ const NavBar = lazy(() => import("./NavBar")),
   Article = lazy(() => import("./Article"));
 
 export default () => {
-  const [CommonStore, UserStore, { match }] = useStore(
+  const [CommonStore, UserStore, { match, getParams }] = useStore(
     "common",
     "user",
     "router"
@@ -18,17 +18,19 @@ export default () => {
   if (!CommonStore.state.token) CommonStore.setAppLoaded();
   else UserStore.pullUser().finally(() => CommonStore.setAppLoaded());
 
-  return <>
-    <NavBar />
-    <Show when={(CommonStore.state.appLoaded)}>
-      <Switch>
-        <Match when={(match(''))}><Home /></Match>
-        <Match when={(match('editor'))}><Editor /></Match>
-        <Match when={(match('settings'))}><Settings /></Match>
-        <Match when={(match('login'))}><Auth /></Match>
-        <Match when={(match('register'))}><Auth /></Match>
-        <Match when={(match('article'))}><Article /></Match>
-      </Switch>
-    </Show>
-  </>;
+  return (
+    <>
+      <NavBar />
+      <Show when={CommonStore.state.appLoaded}>
+        <Switch>
+          <Match when={match("")}><Home /></Match>
+          <Match when={match("editor")}><Editor {...getParams()} /></Match>
+          <Match when={match("settings")}><Settings /></Match>
+          <Match when={match("login")}><Auth /></Match>
+          <Match when={match("register")}><Auth /></Match>
+          <Match when={match("article")}><Article {...getParams()} /></Match>
+        </Switch>
+      </Show>
+    </>
+  );
 };
