@@ -24,15 +24,15 @@
   },
   "homepage": "https://github.com/ryansolid/solid-realworld#readme",
   "devDependencies": {
-    "@babel/core": "7.6.2",
+    "@babel/core": "7.7.4",
     "@babel/plugin-syntax-dynamic-import": "7.2.0",
-    "babel-preset-solid": "0.2.1",
-    "rollup": "1.26.0",
+    "babel-preset-solid": "0.2.3",
+    "rollup": "1.27.8",
     "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-clear": "^2.0.7",
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "5.1.2",
-    "solid-js": "0.13.0"
+    "solid-js": "0.14.7"
   }
 }

@@ -1,5 +1,5 @@
 import { render } from 'solid-js/dom';
-import App from './components/App';
+import App from './App';
 import { Provider } from './store';
 
 render(() => (

@@ -1,4 +1,4 @@
-import { createEffect } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 import { useStore } from "../store";
 import NavLink from "./NavLink";
 import ArticleList from "./ArticleList";
@@ -6,26 +6,22 @@ import ArticleList from "./ArticleList";
 const qsParse = () => "";
 
 export default () => {
-  const [CommonStore, UserStore, ArticlesStore] = useStore(
+  const [CommonStore, UserStore, ArticlesStore, { location }] = useStore(
       "common",
       "user",
-      "articles"
+      "articles",
+      "router"
     ),
-    getTab = () => qsParse(window.location.search).tab || "all",
-    getTag = () => qsParse(window.location.search).tag || "",
+    [tab, setTab] = createSignal(CommonStore.state.token ? "feed" : "all"),
     getPredicate = () => {
-      switch (getTab()) {
+      switch (tab()) {
         case "feed":
           return { myFeed: true };
-        case "tag":
-          return { tag: qsParse(window.location.search).tag };
-        default:
+        case "all":
           return {};
+        default:
+          return { tag: tab() };
       }
-    },
-    handleTabChange = tab => {
-      if (props.location.query.tab === tab) return;
-      props.router.push({ ...props.location, query: { tab } });
     },
     handleSetPage = page => {
       ArticlesStore.setPage(page);
@@ -33,14 +29,16 @@ export default () => {
     };
 
   createEffect(() => {
-    // if (
-    //   getTab(props) !== getTab(previousProps) ||
-    //   getTag(props) !== getTag(previousProps)
-    // ) {
+    const search = location().split("?")[1];
+    if (!search) return setTab("all");
+    const query = new URLSearchParams(search);
+    setTab(query.get("tab"));
+  });
+  createEffect(() => {
     ArticlesStore.setPredicate(getPredicate());
     ArticlesStore.loadArticles();
-    // }
   });
+  CommonStore.loadTags();
 
   return (
     <div class="home-page">
@@ -60,23 +58,31 @@ export default () => {
               <ul class="nav nav-pills outline-active">
                 <Show when={UserStore.state.currentUser}>
                   <li class="nav-item">
-                    <NavLink class="nav-link" route="?tab=feed">
+                    <NavLink
+                      class="nav-link"
+                      href="?tab=feed"
+                      active={tab() === "feed"}
+                    >
                       Your Feed
                     </NavLink>
                   </li>
                 </Show>
                 <li class="nav-item">
-                  <NavLink class="nav-link" route="?tab=all">
+                  <NavLink
+                    class="nav-link"
+                    href="?tab=all"
+                    active={tab() === "all"}
+                  >
                     Global Feed
                   </NavLink>
                 </li>
-                {/* <Show when={props.tag}>
+                <Show when={tab() !== "all" && tab() !== "feed"}>
                   <li className="nav-item">
                     <a href="" className="nav-link active">
-                      <i className="ion-pound" /> {props.tag}
+                      <i className="ion-pound" /> {tab()}
                     </a>
                   </li>
-                </Show> */}
+                </Show>
               </ul>
             </div>
 
@@ -96,10 +102,7 @@ export default () => {
                 <div class="tag-list">
                   <For each={CommonStore.state.tags}>
                     {tag => (
-                      <a
-                        href={`#/?tab=tag&tag=${tag}`}
-                        class="tag-pill tag-default"
-                      >
+                      <a href={`#/?tab=${tag}`} class="tag-pill tag-default">
                         {tag}
                       </a>
                     )}

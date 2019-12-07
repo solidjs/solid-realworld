@@ -19,12 +19,12 @@ export default ({ article }) => {
   return (
     <div class="article-preview">
       <div class="article-meta">
-        <NavLink to={`/@${article.author.username}`}>
+        <NavLink href={`@${article.author.username}`} route="profile">
           <img src={article.author.image} alt="" />
         </NavLink>
 
         <div class="info">
-          <NavLink class="author" to={`/@${article.author.username}`}>
+          <NavLink class="author" href={`@${article.author.username}`} route="profile">
             {article.author.username}
           </NavLink>
           <span class="date">{new Date(article.createdAt).toDateString()}</span>
@@ -40,7 +40,7 @@ export default ({ article }) => {
         </div>
       </div>
 
-      <NavLink to={`/article/${article.slug}`} class="preview-link">
+      <NavLink href={`article/${article.slug}`} route="article" class="preview-link">
         <h1>{article.title}</h1>
         <p>{article.description}</p>
         <span>Read more...</span>

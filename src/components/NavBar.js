@@ -44,8 +44,8 @@ export default () => {
               </NavLink>
             </li>
             <li class="nav-item">
-              <NavLink class="nav-link" route="profile">
-                <i class="ion-compose"></i>&nbsp;User
+              <NavLink class="nav-link" route="profile" href={`@${UserStore.state.currentUser.username}`}>
+                <i class="ion-compose"></i>&nbsp;{UserStore.state.currentUser}
               </NavLink>
             </li>
           </Show>

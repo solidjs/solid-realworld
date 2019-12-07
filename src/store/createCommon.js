@@ -22,7 +22,7 @@ export default function createCommon(agent) {
     async loadTags() {
       setState('isLoadingTags', true);
       try {
-        const { tags } = agent.Tags.getAll();
+        const { tags } = await agent.Tags.getAll();
         setState({ tags: tags.map(t => t.toLowerCase()) });
       } finally {
         setState('isLoadingTags', false);

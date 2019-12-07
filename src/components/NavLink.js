@@ -1,12 +1,12 @@
 import { useStore } from "../store";
 
 export default props => {
-  const [{ match }] = useStore("router");
+  const [{ getParams }] = useStore("router");
   return (
     <a
       class={props.class}
-      classList={{ active: match(props.route) }}
-      href={`#/${props.route}`}
+      classList={{ active: props.active || getParams().routeName === props.route }}
+      href={`#/${props.href || props.route}`}
     >
       {props.children}
     </a>
