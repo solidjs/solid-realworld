@@ -1,4 +1,5 @@
 import resolve from "rollup-plugin-node-resolve";
+import commonjs from "rollup-plugin-commonjs";
 import babel from "rollup-plugin-babel";
 import clear from "rollup-plugin-clear";
 import { terser } from "rollup-plugin-terser";
@@ -15,6 +16,7 @@ const plugins = [
     plugins: ["@babel/syntax-dynamic-import"]
   }),
   resolve({ extensions: [".js", ".jsx"] }),
+  commonjs(),
   !process.env.production &&
     serve({ contentBase: "", host: "0.0.0.0", port: 5000 }),
   process.env.production && terser()

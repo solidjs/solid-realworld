@@ -1,139 +1,242 @@
-export default () => {
+import { createState } from "solid-js";
+import marked from "marked";
+import NavLink from "./NavLink";
+import { useStore } from "../store";
+
+const ArticleActions = props => {
+  const article = props.article;
+  const handleDelete = () => props.onDelete(article.slug);
+
+  return (
+    <Show when={props.canModify} fallback={<span />}>
+      <span>
+        <NavLink
+          href={`editor/${article.slug}`}
+          route="editor"
+          className="btn btn-outline-secondary btn-sm"
+        >
+          <i className="ion-edit" /> Edit Article
+        </NavLink>
+        <button
+          className="btn btn-outline-danger btn-sm"
+          onClick={handleDelete}
+        >
+          <i className="ion-trash-a" /> Delete Article
+        </button>
+      </span>
+    </Show>
+  );
+};
+
+const ArticleMeta = props => {
+  const article = props.article;
+  return (
+    <div className="article-meta">
+      <NavLink href={`@${article.author.username}`} route="profile">
+        <img src={article.author.image} alt="" />
+      </NavLink>
+
+      <div className="info">
+        <NavLink href={`@${article.author.username}`} route="profile" className="author">
+          {article.author.username}
+        </NavLink>
+        <span className="date">
+          {new Date(article.createdAt).toDateString()}
+        </span>
+      </div>
+
+      <ArticleActions
+        canModify={props.canModify}
+        article={article}
+        onDelete={props.onDelete}
+      />
+    </div>
+  );
+};
+
+const Comment = props => {
+  const comment = props.comment;
+  const show =
+    props.currentUser && props.currentUser.username === comment.author.username;
+  return (
+    <div className="card">
+      <div className="card-block">
+        <p className="card-text">{comment.body}</p>
+      </div>
+      <div className="card-footer">
+        <NavLink href={`@${comment.author.username}`} route="profile" className="comment-author">
+          <img
+            src={comment.author.image}
+            className="comment-author-img"
+            alt=""
+          />
+        </NavLink>
+        &nbsp;
+        <NavLink href={`@${comment.author.username}`} route="profile" className="comment-author">
+          {comment.author.username}
+        </NavLink>
+        <span className="date-posted">
+          {new Date(comment.createdAt).toDateString()}
+        </span>
+        {show && (
+          <span className="mod-options">
+            <i
+              className="ion-trash-a"
+              onClick={() => props.onDelete(comment.id)}
+            />
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const CommentInput = props => {
+  const [CommentsStore] = useStore("comments"),
+    [state, setState] = createState({ body: "" }),
+    handleBodyChange = ev => setState({ body: ev.target.value }),
+    createComment = ev => {
+      ev.preventDefault();
+      CommentsStore.createComment({ body: state.body }).then(() =>
+        setState({ body: "" })
+      );
+    };
+  return (
+    <form className="card comment-form" onSubmit={createComment}>
+      <div className="card-block">
+        <textarea
+          className="form-control"
+          placeholder="Write a comment..."
+          value={state.body}
+          disabled={CommentsStore.state.isCreatingComment}
+          onChange={handleBodyChange}
+          rows="3"
+        />
+      </div>
+      <div className="card-footer">
+        <img
+          src={props.currentUser.image}
+          className="comment-author-img"
+          alt=""
+        />
+        <button className="btn btn-sm btn-primary" type="submit">
+          Post Comment
+        </button>
+      </div>
+    </form>
+  );
+};
+
+const CommentContainer = props => (
+  <div className="col-xs-12 col-md-8 offset-md-2">
+    <Show
+      when={props.currentUser}
+      fallback={
+        <p>
+          <NavLink route="login">Sign in</NavLink>
+          &nbsp;or&nbsp;
+          <NavLink route="register">sign up</NavLink>
+          &nbsp;to add comments on this article.
+        </p>
+      }
+    >
+      <list-errors errors={props.errors} />
+      <CommentInput slug={props.slug} currentUser={props.currentUser} />
+    </Show>
+    <For each={props.comments}>
+      {comment => (
+        <Comment
+          comment={comment}
+          currentUser={props.currentUser}
+          slug={props.slug}
+          key={comment.id}
+          onDelete={props.onDelete}
+        />
+      )}
+    </For>
+  </div>
+);
+
+export default props => {
+  let canModify;
+  const [ArticlesStore, CommentsStore, UserStore] = useStore(
+      "articles",
+      "comments",
+      "user"
+    ),
+    slug = props.params[0],
+    article = () => ArticlesStore.state.articlesRegistry[slug],
+    handleDeleteArticle = slug =>
+      ArticlesStore.deleteArticle(slug).then(() => {
+        // this.props.history.replace("/")
+      }),
+    handleDeleteComment = id => CommentsStore.deleteComment(id);
+
+  ArticlesStore.loadArticle(slug, { acceptCached: true });
+  CommentsStore.setArticleSlug(slug);
+  CommentsStore.loadComments();
+
   return (
     <div class="article-page">
-      <div class="banner">
-        <div class="container">
-          <h1>How to build webapps that scale</h1>
-
-          <div class="article-meta">
-            <a href="">
-              <img src="http://i.imgur.com/Qr71crq.jpg" />
-            </a>
-            <div class="info">
-              <a href="" class="author">
-                Eric Simons
-              </a>
-              <span class="date">January 20th</span>
-            </div>
-            <button class="btn btn-sm btn-outline-secondary">
-              <i class="ion-plus-round"></i>
-              &nbsp; Follow Eric Simons <span class="counter">(10)</span>
-            </button>
-            &nbsp;&nbsp;
-            <button class="btn btn-sm btn-outline-primary">
-              <i class="ion-heart"></i>
-              &nbsp; Favorite Post <span class="counter">(29)</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="container page">
-        <div class="row article-content">
-          <div class="col-md-12">
-            <p>
-              Web development technologies have evolved at an incredible clip
-              over the past few years.
-            </p>
-            <h2 id="introducing-ionic">Introducing RealWorld.</h2>
-            <p>It's a great solution for learning how other frameworks work.</p>
-          </div>
-        </div>
-
-        <hr />
-
-        <div class="article-actions">
-          <div class="article-meta">
-            <a href="profile.html">
-              <img src="http://i.imgur.com/Qr71crq.jpg" />
-            </a>
-            <div class="info">
-              <a href="" class="author">
-                Eric Simons
-              </a>
-              <span class="date">January 20th</span>
-            </div>
-            <button class="btn btn-sm btn-outline-secondary">
-              <i class="ion-plus-round"></i>
-              &nbsp; Follow Eric Simons <span class="counter">(10)</span>
-            </button>
-            &nbsp;
-            <button class="btn btn-sm btn-outline-primary">
-              <i class="ion-heart"></i>
-              &nbsp; Favorite Post <span class="counter">(29)</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-12 col-md-8 offset-md-2">
-            <form class="card comment-form">
-              <div class="card-block">
-                <textarea
-                  class="form-control"
-                  placeholder="Write a comment..."
-                  rows="3"
-                ></textarea>
-              </div>
-              <div class="card-footer">
-                <img
-                  src="http://i.imgur.com/Qr71crq.jpg"
-                  class="comment-author-img"
-                />
-                <button class="btn btn-sm btn-primary">Post Comment</button>
-              </div>
-            </form>
-
-            <div class="card">
-              <div class="card-block">
-                <p class="card-text">
-                  With supporting text below as a natural lead-in to additional
-                  content.
-                </p>
-              </div>
-              <div class="card-footer">
-                <a href="" class="comment-author">
-                  <img
-                    src="http://i.imgur.com/Qr71crq.jpg"
-                    class="comment-author-img"
+      <Show when={article()}>
+        {
+          ((canModify =
+            UserStore.state.currentUser &&
+            UserStore.state.currentUser.username === article.author.username),
+          (
+            <>
+              <div className="banner">
+                <div className="container">
+                  <h1>{article().title}</h1>
+                  <ArticleMeta
+                    article={article()}
+                    canModify={canModify}
+                    onDelete={handleDeleteArticle}
                   />
-                </a>
-                &nbsp;
-                <a href="" class="comment-author">
-                  Jacob Schmidt
-                </a>
-                <span class="date-posted">Dec 29th</span>
+                </div>
               </div>
-            </div>
 
-            <div class="card">
-              <div class="card-block">
-                <p class="card-text">
-                  With supporting text below as a natural lead-in to additional
-                  content.
-                </p>
-              </div>
-              <div class="card-footer">
-                <a href="" class="comment-author">
-                  <img
-                    src="http://i.imgur.com/Qr71crq.jpg"
-                    class="comment-author-img"
+              <div class="container page">
+                <div className="row article-content">
+                  <div className="col-xs-12">
+                    <div innerHTML={marked(article().body, { sanitize: true })} />
+
+                    <ul className="tag-list">
+                      {article().tagList.map(tag => {
+                        return (
+                          <li className="tag-default tag-pill tag-outline">
+                            {tag}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </div>
+
+                <hr />
+
+                <div class="article-actions">
+                  <ArticleMeta
+                    article={article()}
+                    canModify={canModify}
+                    onDelete={handleDeleteArticle}
                   />
-                </a>
-                &nbsp;
-                <a href="" class="comment-author">
-                  Jacob Schmidt
-                </a>
-                <span class="date-posted">Dec 29th</span>
-                <span class="mod-options">
-                  <i class="ion-edit"></i>
-                  <i class="ion-trash-a"></i>
-                </span>
+                </div>
+
+                <div class="row">
+                  <CommentContainer
+                    comments={CommentsStore.state.comments}
+                    errors={CommentsStore.state.commentErrors}
+                    slug={slug}
+                    currentUser={UserStore.state.currentUser}
+                    onDelete={handleDeleteComment}
+                  />
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            </>
+          ))
+        }
+      </Show>
     </div>
   );
 };

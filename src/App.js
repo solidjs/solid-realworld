@@ -24,12 +24,12 @@ export default () => {
       <NavBar />
       <Show when={CommonStore.state.appLoaded}>
         <Switch>
-          <Match when={match("editor", /^#\/editor\/?(.*)/)}><Editor {...getParams()} /></Match>
-          <Match when={match("settings", /^#\/settings/)}><Settings /></Match>
-          <Match when={match("login", /^#\/login/)}><Auth /></Match>
-          <Match when={match("register", /^#\/register/)}><Auth /></Match>
-          <Match when={match("article", /^#\/article\/(.*)/)}><Article {...getParams()} /></Match>
-          <Match when={match("profile", /^#\/@([^/]*)\/?(favorites)?/)}><Profile {...getParams()} /></Match>
+          <Match when={match("editor", /^editor\/?(.*)/)}><Editor {...getParams()} /></Match>
+          <Match when={match("settings", /^settings/)}><Settings /></Match>
+          <Match when={match("login", /^login/)}><Auth /></Match>
+          <Match when={match("register", /^register/)}><Auth /></Match>
+          <Match when={match("article", /^article\/(.*)/)}><Article {...getParams()} /></Match>
+          <Match when={match("profile", /^@([^/]*)\/?(favorites)?/)}><Profile {...getParams()} /></Match>
           <Match when={match("", /^#?$/)}><Home /></Match>
         </Switch>
       </Show>

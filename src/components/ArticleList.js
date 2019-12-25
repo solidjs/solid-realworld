@@ -1,4 +1,3 @@
-import { selectWhen } from "solid-js/dom";
 import LoadingSpinner from "./LoadingSpinner";
 import ArticlePreview from "./ArticlePreview";
 
@@ -23,15 +22,15 @@ export default props => {
       <Show when={props.totalPagesCount > 1}>
         <nav>
           <ul className="pagination">
-            <For
-              each={[...Array(props.totalPagesCount).keys()]}
-              transform={selectWhen(() => props.currentPage, "active")}
-            >
+            <For each={[...Array(props.totalPagesCount).keys()]}>
               {v => (
-                <li model={v} class="page-item" onClick={onSetPage}>
-                  <a class="page-link" href="">
-                    {v + 1}
-                  </a>
+                <li
+                  model={v}
+                  class="page-item"
+                  classList={{ active: props.currentPage === v }}
+                  onClick={onSetPage}
+                >
+                  <a class="page-link" href="" textContent={v + 1} />
                 </li>
               )}
             </For>

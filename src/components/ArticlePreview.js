@@ -5,7 +5,7 @@ const FAVORITED_CLASS = 'btn btn-sm btn-primary';
 const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary';
 
 export default ({ article }) => {
-  const [ArticlesStore] = useStore("article");
+  const [ArticlesStore] = useStore("articles");
 
   const handleClickFavorite = e => {
     e.preventDefault();
