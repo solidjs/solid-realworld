@@ -1,33 +1,24 @@
-import { createState, createEffect } from "solid-js";
+import { createEffect } from "solid-js";
 
-export default function createCommon(agent) {
-  const [state, setState] = createState({
-    token: window.localStorage.getItem('jwt'),
-    appLoaded: false,
-    tags: [],
-    isLoadingTags: false
+export default function createCommon(agent, store, loadState, setState) {
+  const [state, actions] = store;
+  loadState({
+    tags: agent.Tags.getAll().then(tags => tags.map(t => t.toLowerCase()))
   });
   createEffect(() => {
     if (state.token) {
-      window.localStorage.setItem('jwt', token);
+      window.localStorage.setItem("jwt", token);
     } else {
-      window.localStorage.removeItem('jwt');
+      window.localStorage.removeItem("jwt");
     }
   });
-  return {
-    state,
-    appName: 'Conduit',
-    setToken(token) { setState({ token }); },
-    setAppLoaded() { setState('appLoaded', true); },
-    async loadTags() {
-      setState('isLoadingTags', true);
-      try {
-        const { tags } = await agent.Tags.getAll();
-        setState({ tags: tags.map(t => t.toLowerCase()) });
-      } finally {
-        setState('isLoadingTags', false);
-      }
+  store[1] = {
+    ...actions,
+    setToken(token) {
+      setState({ token });
+    },
+    setAppLoaded() {
+      setState("appLoaded", true);
     }
-  }
+  };
 }
-

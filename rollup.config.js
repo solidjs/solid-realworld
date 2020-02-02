@@ -3,7 +3,6 @@ import commonjs from "rollup-plugin-commonjs";
 import babel from "rollup-plugin-babel";
 import clear from "rollup-plugin-clear";
 import { terser } from "rollup-plugin-terser";
-import serve from "rollup-plugin-serve";
 
 const plugins = [
   clear({
@@ -13,12 +12,10 @@ const plugins = [
   babel({
     exclude: "node_modules/**",
     presets: ["solid"],
-    plugins: ["@babel/syntax-dynamic-import"]
+    plugins: ["@babel/syntax-dynamic-import", "@babel/plugin-proposal-optional-chaining"]
   }),
   resolve({ extensions: [".js", ".jsx"] }),
   commonjs(),
-  !process.env.production &&
-    serve({ contentBase: "", host: "0.0.0.0", port: 5000 }),
   process.env.production && terser()
 ];
 

@@ -2,13 +2,13 @@ import { useStore } from "../store";
 import NavLink from "./NavLink";
 
 export default () => {
-  const [CommonStore, UserStore] = useStore("common", "user");
+  const [store] = useStore();
 
   return (
     <nav class="navbar navbar-light">
       <div class="container">
         <NavLink class="navbar-brand" route="">
-          {CommonStore.appName.toLowerCase()}
+          {store.appName.toLowerCase()}
         </NavLink>
         <ul class="nav navbar-nav pull-xs-right">
           <li class="nav-item">
@@ -17,7 +17,7 @@ export default () => {
             </NavLink>
           </li>
           <Show
-            when={UserStore.state.currentUser}
+            when={store.currentUser}
             fallback={
               <>
                 <li class="nav-item">
@@ -44,8 +44,8 @@ export default () => {
               </NavLink>
             </li>
             <li class="nav-item">
-              <NavLink class="nav-link" route="profile" href={`@${UserStore.state.currentUser.username}`}>
-                <i class="ion-compose"></i>&nbsp;{UserStore.state.currentUser}
+              <NavLink class="nav-link" route="profile" href={`@${store.currentUser.username}`}>
+                <i class="ion-compose"></i>&nbsp;{store.currentUser}
               </NavLink>
             </li>
           </Show>

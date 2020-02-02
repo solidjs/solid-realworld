@@ -13,15 +13,12 @@ const ArticleActions = props => {
         <NavLink
           href={`editor/${article.slug}`}
           route="editor"
-          className="btn btn-outline-secondary btn-sm"
+          class="btn btn-outline-secondary btn-sm"
         >
-          <i className="ion-edit" /> Edit Article
+          <i class="ion-edit" /> Edit Article
         </NavLink>
-        <button
-          className="btn btn-outline-danger btn-sm"
-          onClick={handleDelete}
-        >
-          <i className="ion-trash-a" /> Delete Article
+        <button class="btn btn-outline-danger btn-sm" onClick={handleDelete}>
+          <i class="ion-trash-a" /> Delete Article
         </button>
       </span>
     </Show>
@@ -31,18 +28,20 @@ const ArticleActions = props => {
 const ArticleMeta = props => {
   const article = props.article;
   return (
-    <div className="article-meta">
+    <div class="article-meta">
       <NavLink href={`@${article.author.username}`} route="profile">
         <img src={article.author.image} alt="" />
       </NavLink>
 
-      <div className="info">
-        <NavLink href={`@${article.author.username}`} route="profile" className="author">
+      <div class="info">
+        <NavLink
+          href={`@${article.author.username}`}
+          route="profile"
+          class="author"
+        >
           {article.author.username}
         </NavLink>
-        <span className="date">
-          {new Date(article.createdAt).toDateString()}
-        </span>
+        <span class="date">{new Date(article.createdAt).toDateString()}</span>
       </div>
 
       <ArticleActions
@@ -59,31 +58,32 @@ const Comment = props => {
   const show =
     props.currentUser && props.currentUser.username === comment.author.username;
   return (
-    <div className="card">
-      <div className="card-block">
-        <p className="card-text">{comment.body}</p>
+    <div class="card">
+      <div class="card-block">
+        <p class="card-text">{comment.body}</p>
       </div>
-      <div className="card-footer">
-        <NavLink href={`@${comment.author.username}`} route="profile" className="comment-author">
-          <img
-            src={comment.author.image}
-            className="comment-author-img"
-            alt=""
-          />
+      <div class="card-footer">
+        <NavLink
+          href={`@${comment.author.username}`}
+          route="profile"
+          class="comment-author"
+        >
+          <img src={comment.author.image} class="comment-author-img" alt="" />
         </NavLink>
         &nbsp;
-        <NavLink href={`@${comment.author.username}`} route="profile" className="comment-author">
+        <NavLink
+          href={`@${comment.author.username}`}
+          route="profile"
+          class="comment-author"
+        >
           {comment.author.username}
         </NavLink>
-        <span className="date-posted">
+        <span class="date-posted">
           {new Date(comment.createdAt).toDateString()}
         </span>
         {show && (
-          <span className="mod-options">
-            <i
-              className="ion-trash-a"
-              onClick={() => props.onDelete(comment.id)}
-            />
+          <span class="mod-options">
+            <i class="ion-trash-a" onClick={() => props.onDelete(comment.id)} />
           </span>
         )}
       </div>
@@ -92,34 +92,30 @@ const Comment = props => {
 };
 
 const CommentInput = props => {
-  const [CommentsStore] = useStore("comments"),
+  const [, { createComment }] = useStore(),
     [state, setState] = createState({ body: "" }),
     handleBodyChange = ev => setState({ body: ev.target.value }),
-    createComment = ev => {
+    createCommentHandler = ev => {
       ev.preventDefault();
-      CommentsStore.createComment({ body: state.body }).then(() =>
+      createComment({ body: state.body }).then(() =>
         setState({ body: "" })
       );
     };
   return (
-    <form className="card comment-form" onSubmit={createComment}>
-      <div className="card-block">
+    <form class="card comment-form" onSubmit={createCommentHandler}>
+      <div class="card-block">
         <textarea
-          className="form-control"
+          class="form-control"
           placeholder="Write a comment..."
           value={state.body}
-          disabled={CommentsStore.state.isCreatingComment}
+          disabled={store.isCreatingComment}
           onChange={handleBodyChange}
           rows="3"
         />
       </div>
-      <div className="card-footer">
-        <img
-          src={props.currentUser.image}
-          className="comment-author-img"
-          alt=""
-        />
-        <button className="btn btn-sm btn-primary" type="submit">
+      <div class="card-footer">
+        <img src={props.currentUser.image} class="comment-author-img" alt="" />
+        <button class="btn btn-sm btn-primary" type="submit">
           Post Comment
         </button>
       </div>
@@ -128,7 +124,7 @@ const CommentInput = props => {
 };
 
 const CommentContainer = props => (
-  <div className="col-xs-12 col-md-8 offset-md-2">
+  <div class="col-xs-12 col-md-8 offset-md-2">
     <Show
       when={props.currentUser}
       fallback={
@@ -159,34 +155,28 @@ const CommentContainer = props => (
 
 export default props => {
   let canModify;
-  const [ArticlesStore, CommentsStore, UserStore] = useStore(
-      "articles",
-      "comments",
-      "user"
-    ),
+  const [store, { loadArticle, deleteArticle, deleteComment, loadComments }] = useStore(),
     slug = props.params[0],
-    article = () => ArticlesStore.state.articlesRegistry[slug],
+    article = () => store.articles[slug],
     handleDeleteArticle = slug =>
-      ArticlesStore.deleteArticle(slug).then(() => {
+      deleteArticle(slug).then(() => {
         // this.props.history.replace("/")
-      }),
-    handleDeleteComment = id => CommentsStore.deleteComment(id);
+      });
 
-  ArticlesStore.loadArticle(slug, { acceptCached: true });
-  CommentsStore.setArticleSlug(slug);
-  CommentsStore.loadComments();
+  loadArticle(slug, { acceptCached: true });
+  loadComments(slug);
 
   return (
     <div class="article-page">
       <Show when={article()}>
         {
           ((canModify =
-            UserStore.state.currentUser &&
-            UserStore.state.currentUser.username === article.author.username),
+            store.currentUser &&
+            store.currentUser.username === article().author.username),
           (
             <>
-              <div className="banner">
-                <div className="container">
+              <div class="banner">
+                <div class="container">
                   <h1>{article().title}</h1>
                   <ArticleMeta
                     article={article()}
@@ -197,14 +187,16 @@ export default props => {
               </div>
 
               <div class="container page">
-                <div className="row article-content">
-                  <div className="col-xs-12">
-                    <div innerHTML={marked(article().body, { sanitize: true })} />
+                <div class="row article-content">
+                  <div class="col-xs-12">
+                    <div
+                      innerHTML={marked(article().body, { sanitize: true })}
+                    />
 
-                    <ul className="tag-list">
+                    <ul class="tag-list">
                       {article().tagList.map(tag => {
                         return (
-                          <li className="tag-default tag-pill tag-outline">
+                          <li class="tag-default tag-pill tag-outline">
                             {tag}
                           </li>
                         );
@@ -225,11 +217,11 @@ export default props => {
 
                 <div class="row">
                   <CommentContainer
-                    comments={CommentsStore.state.comments}
-                    errors={CommentsStore.state.commentErrors}
+                    comments={store.comments}
+                    errors={store.commentErrors}
                     slug={slug}
-                    currentUser={UserStore.state.currentUser}
-                    onDelete={handleDeleteComment}
+                    currentUser={store.currentUser}
+                    onDelete={deleteComment}
                   />
                 </div>
               </div>

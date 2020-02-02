@@ -5,49 +5,51 @@ const FAVORITED_CLASS = 'btn btn-sm btn-primary';
 const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary';
 
 export default ({ article }) => {
-  const [ArticlesStore] = useStore("articles");
+  const [{ token }, { unmakeFavorite, makeFavorite }] = useStore(),
+    { title, description, slug, createdAt, tagList, author: { username, image }} = article;
 
   const handleClickFavorite = e => {
     e.preventDefault();
-    if (article.favorited) {
-      ArticlesStore.unmakeFavorite(article.slug);
-    } else {
-      ArticlesStore.makeFavorite(article.slug);
-    }
+    article.favorited
+      ? unmakeFavorite(slug)
+      : makeFavorite(slug);
   };
 
   return (
     <div class="article-preview">
       <div class="article-meta">
-        <NavLink href={`@${article.author.username}`} route="profile">
-          <img src={article.author.image} alt="" />
+        <NavLink href={`@${username}`} route="profile">
+          <img src={image} alt="" />
         </NavLink>
 
         <div class="info">
-          <NavLink class="author" href={`@${article.author.username}`} route="profile">
-            {article.author.username}
+          <NavLink class="author" href={`@${username}`} route="profile">
+            {username}
           </NavLink>
-          <span class="date">{new Date(article.createdAt).toDateString()}</span>
+          <span class="date">{new Date(createdAt).toDateString()}</span>
         </div>
 
-        <div class="pull-xs-right">
-          <button
-            class={article.favorited ? FAVORITED_CLASS : NOT_FAVORITED_CLASS}
-            onClick={handleClickFavorite}
-          >
-            <i class="ion-heart" /> {article.favoritesCount}
-          </button>
-        </div>
+        {token && (
+          <div class="pull-xs-right">
+            <button
+              class={article.favorited ? FAVORITED_CLASS : NOT_FAVORITED_CLASS}
+              onClick={handleClickFavorite}
+            >
+              <i class="ion-heart" /> {article.favoritesCount}
+            </button>
+          </div>
+        )}
       </div>
 
-      <NavLink href={`article/${article.slug}`} route="article" class="preview-link">
-        <h1>{article.title}</h1>
-        <p>{article.description}</p>
+      <NavLink href={`article/${slug}`} route="article" class="preview-link">
+        <h1>{title}</h1>
+        <p>{description}</p>
         <span>Read more...</span>
         <ul class="tag-list">
-          <For each={article.tagList}>
-            {tag => <li class="tag-default tag-pill tag-outline">{tag}</li>}
-          </For>
+          {/*@once*/
+          tagList.map(tag => (
+            <li class="tag-default tag-pill tag-outline" textContent={tag} />
+          ))}
         </ul>
       </NavLink>
     </div>

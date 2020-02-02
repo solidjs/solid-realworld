@@ -1,20 +1,11 @@
-import { createState } from "solid-js";
-
-export default function createUser(agent) {
-  const [state, setState] = createState();
-  return {
-    state,
-    forgetUser() {
-      setState("currentUser", undefined);
-    },
-    async pullUser() {
-      setState({ loadingUser: true });
-      try {
-        const { user } = await agent.Auth.current();
-        setState({ currentUser: user });
-      } finally {
-        setState({ loadingUser: false });
-      }
+export default function createUser(agent, store, loadState, setState) {
+  const [, actions] = store;
+  store[1] = {
+    ...actions,
+    pullUser() {
+      let p;
+      loadState({ currentUser: (p = agent.Auth.current()) });
+      return p;
     },
     async updateUser(newUser) {
       setState({ updatingUser: true });

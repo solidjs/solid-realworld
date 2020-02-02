@@ -1,18 +1,19 @@
-import { createEffect, createSignal } from "solid-js";
-import { useStore } from "../store";
+import { createEffect, createMemo, useTransition } from "solid-js";
+import { useStore, useRouter } from "../store";
 import NavLink from "./NavLink";
 import ArticleList from "./ArticleList";
 
-const qsParse = () => "";
-
 export default () => {
-  const [CommonStore, UserStore, ArticlesStore, { location }] = useStore(
-      "common",
-      "user",
-      "articles",
-      "router"
-    ),
-    [tab, setTab] = createSignal(CommonStore.state.token ? "feed" : "all"),
+  const [store, { loadArticles, setPage }] = useStore(),
+    { token, appName } = store,
+    { location } = useRouter(),
+    tab = createMemo(() => {
+      const search = location().split("?")[1];
+      if (!search) return token ? "feed" : "all";
+      const query = new URLSearchParams(search);
+      return query.get("tab");
+    }),
+    [, start] = useTransition({ timeoutMs: 250 }),
     getPredicate = () => {
       switch (tab()) {
         case "feed":
@@ -24,39 +25,34 @@ export default () => {
       }
     },
     handleSetPage = page => {
-      ArticlesStore.setPage(page);
-      ArticlesStore.loadArticles();
+      start(() => {
+        setPage(page);
+        loadArticles(getPredicate());
+      });
     };
 
-  createEffect(() => {
-    const search = location().split("?")[1];
-    if (!search) return setTab("all");
-    const query = new URLSearchParams(search);
-    setTab(query.get("tab"));
-  });
-  createEffect(() => {
-    ArticlesStore.setPredicate(getPredicate());
-    ArticlesStore.loadArticles();
-  });
-  CommonStore.loadTags();
+  createEffect(() => start(() => loadArticles(getPredicate())));
 
   return (
     <div class="home-page">
-      <Show when={!CommonStore.state.token}>
+      {!token && (
         <div class="banner">
           <div class="container">
-            <h1 class="logo-font">{CommonStore.appName.toLowerCase()}</h1>
+            <h1
+              class="logo-font"
+              textContent={/*@once*/ appName.toLowerCase()}
+            />
             <p>A place to share your knowledge.</p>
           </div>
         </div>
-      </Show>
+      )}
 
       <div class="container page">
         <div class="row">
           <div class="col-md-9">
             <div class="feed-toggle">
               <ul class="nav nav-pills outline-active">
-                <Show when={UserStore.state.currentUser}>
+                {token && (
                   <li class="nav-item">
                     <NavLink
                       class="nav-link"
@@ -66,7 +62,7 @@ export default () => {
                       Your Feed
                     </NavLink>
                   </li>
-                </Show>
+                )}
                 <li class="nav-item">
                   <NavLink
                     class="nav-link"
@@ -77,30 +73,33 @@ export default () => {
                   </NavLink>
                 </li>
                 <Show when={tab() !== "all" && tab() !== "feed"}>
-                  <li className="nav-item">
-                    <a href="" className="nav-link active">
-                      <i className="ion-pound" /> {tab()}
+                  <li class="nav-item">
+                    <a href="" class="nav-link active">
+                      <i class="ion-pound" /> {tab()}
                     </a>
                   </li>
                 </Show>
               </ul>
             </div>
 
-            <ArticleList
-              articles={ArticlesStore.getArticles()}
-              loading={ArticlesStore.state.isLoading}
-              totalPagesCount={ArticlesStore.state.totalPagesCount}
-              currentPage={ArticlesStore.state.page}
-              onSetPage={handleSetPage}
-            />
+            <Suspense
+              fallback={<div class="article-preview">Loading articles...</div>}
+            >
+              <ArticleList
+                articles={Object.values(store.articles)}
+                totalPagesCount={store.totalPagesCount}
+                currentPage={store.page}
+                onSetPage={handleSetPage}
+              />
+            </Suspense>
           </div>
 
           <div class="col-md-3">
             <div class="sidebar">
               <p>Popular Tags</p>
-              <Show when={CommonStore.state.tags}>
+              <Suspense fallback="Loading tags...">
                 <div class="tag-list">
-                  <For each={CommonStore.state.tags}>
+                  <For each={store.tags}>
                     {tag => (
                       <a href={`#/?tab=${tag}`} class="tag-pill tag-default">
                         {tag}
@@ -108,7 +107,7 @@ export default () => {
                     )}
                   </For>
                 </div>
-              </Show>
+              </Suspense>
             </div>
           </div>
         </div>
