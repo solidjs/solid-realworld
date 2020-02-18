@@ -1,17 +1,16 @@
 import { createState } from "solid-js";
 import marked from "marked";
-import NavLink from "./NavLink";
-import { useStore } from "../store";
+import NavLink from "../../components/NavLink";
+import { useStore } from "../../store";
 
 const ArticleActions = props => {
-  const article = props.article;
-  const handleDelete = () => props.onDelete(article.slug);
+  const handleDelete = () => props.onDelete(props.article.slug);
 
   return (
     <Show when={props.canModify} fallback={<span />}>
       <span>
         <NavLink
-          href={`editor/${article.slug}`}
+          href={`editor/${props.article?.slug}`}
           route="editor"
           class="btn btn-outline-secondary btn-sm"
         >
@@ -29,24 +28,26 @@ const ArticleMeta = props => {
   const article = props.article;
   return (
     <div class="article-meta">
-      <NavLink href={`@${article.author.username}`} route="profile">
-        <img src={article.author.image} alt="" />
+      <NavLink href={`@${props.article?.author.username}`} route="profile">
+        <img src={props.article?.author.image} alt="" />
       </NavLink>
 
       <div class="info">
         <NavLink
-          href={`@${article.author.username}`}
+          href={`@${props.article?.author.username}`}
           route="profile"
           class="author"
         >
-          {article.author.username}
+          {props.article?.author.username}
         </NavLink>
-        <span class="date">{new Date(article.createdAt).toDateString()}</span>
+        <span class="date">
+          {new Date(props.article?.createdAt).toDateString()}
+        </span>
       </div>
 
       <ArticleActions
         canModify={props.canModify}
-        article={article}
+        article={props?.article}
         onDelete={props.onDelete}
       />
     </div>
@@ -97,9 +98,7 @@ const CommentInput = props => {
     handleBodyChange = ev => setState({ body: ev.target.value }),
     createCommentHandler = ev => {
       ev.preventDefault();
-      createComment({ body: state.body }).then(() =>
-        setState({ body: "" })
-      );
+      createComment({ body: state.body }).then(() => setState({ body: "" }));
     };
   return (
     <form class="card comment-form" onSubmit={createCommentHandler}>
@@ -153,82 +152,74 @@ const CommentContainer = props => (
   </div>
 );
 
-export default props => {
+export default ({ slug }) => {
   let canModify;
-  const [store, { loadArticle, deleteArticle, deleteComment, loadComments }] = useStore(),
-    slug = props.params[0],
+  const [store, { deleteArticle, deleteComment }] = useStore(),
     article = () => store.articles[slug],
     handleDeleteArticle = slug =>
       deleteArticle(slug).then(() => {
         // this.props.history.replace("/")
       });
 
-  loadArticle(slug, { acceptCached: true });
-  loadComments(slug);
-
   return (
     <div class="article-page">
-      <Show when={article()}>
-        {
-          ((canModify =
-            store.currentUser &&
-            store.currentUser.username === article().author.username),
-          (
-            <>
-              <div class="banner">
-                <div class="container">
-                  <h1>{article().title}</h1>
-                  <ArticleMeta
-                    article={article()}
-                    canModify={canModify}
-                    onDelete={handleDeleteArticle}
+      {
+        ((canModify =
+          store.currentUser &&
+          store.currentUser.username === article()?.author.username),
+        (
+          <>
+            <div class="banner">
+              <div class="container">
+                <h1>{article()?.title}</h1>
+                <ArticleMeta
+                  article={article()}
+                  canModify={canModify}
+                  onDelete={handleDeleteArticle}
+                />
+              </div>
+            </div>
+
+            <div class="container page">
+              <div class="row article-content">
+                <div class="col-xs-12">
+                  <div
+                    innerHTML={
+                      article() && marked(article()?.body, { sanitize: true })
+                    }
                   />
+
+                  <ul class="tag-list">
+                    {article()?.tagList.map(tag => (
+                      <li class="tag-default tag-pill tag-outline">{tag}</li>
+                    ))}
+                  </ul>
                 </div>
               </div>
 
-              <div class="container page">
-                <div class="row article-content">
-                  <div class="col-xs-12">
-                    <div
-                      innerHTML={marked(article().body, { sanitize: true })}
-                    />
+              <hr />
 
-                    <ul class="tag-list">
-                      {article().tagList.map(tag => {
-                        return (
-                          <li class="tag-default tag-pill tag-outline">
-                            {tag}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                </div>
-
-                <hr />
-
-                <div class="article-actions">
-                  <ArticleMeta
-                    article={article()}
-                    canModify={canModify}
-                    onDelete={handleDeleteArticle}
-                  />
-                </div>
-
-                <div class="row">
-                  <CommentContainer
-                    comments={store.comments}
-                    errors={store.commentErrors}
-                    slug={slug}
-                    currentUser={store.currentUser}
-                    onDelete={deleteComment}
-                  />
-                </div>
+              <div class="article-actions">
+                <ArticleMeta
+                  article={article()}
+                  canModify={canModify}
+                  onDelete={handleDeleteArticle}
+                />
               </div>
-            </>
-          ))
-        }
-      </Show>
+
+              <div class="row">
+                <CommentContainer
+                  comments={store.comments}
+                  errors={store.commentErrors}
+                  slug={slug}
+                  currentUser={store.currentUser}
+                  onDelete={deleteComment}
+                />
+              </div>
+            </div>
+          </>
+        ))
+      }
     </div>
   );
 };

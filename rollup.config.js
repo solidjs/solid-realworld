@@ -1,5 +1,5 @@
-import resolve from "rollup-plugin-node-resolve";
-import commonjs from "rollup-plugin-commonjs";
+import resolve from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
 import babel from "rollup-plugin-babel";
 import clear from "rollup-plugin-clear";
 import { terser } from "rollup-plugin-terser";
@@ -16,11 +16,12 @@ const plugins = [
   }),
   resolve({ extensions: [".js", ".jsx"] }),
   commonjs(),
-  process.env.production && terser()
+  terser()
 ];
 
 export default {
   input: "src/index.js",
+  manualChunks: {vendor: ["solid-js", "solid-js/dom"]},
   output: {
     dir: "dist",
     format: "esm"

@@ -1,38 +1,7 @@
-import { createEffect, createMemo, useTransition } from "solid-js";
-import { useStore, useRouter } from "../store";
-import NavLink from "./NavLink";
-import ArticleList from "./ArticleList";
+import NavLink from "../../components/NavLink";
+import ArticleList from "../../components/ArticleList";
 
-export default () => {
-  const [store, { loadArticles, setPage }] = useStore(),
-    { token, appName } = store,
-    { location } = useRouter(),
-    tab = createMemo(() => {
-      const search = location().split("?")[1];
-      if (!search) return token ? "feed" : "all";
-      const query = new URLSearchParams(search);
-      return query.get("tab");
-    }),
-    [, start] = useTransition({ timeoutMs: 250 }),
-    getPredicate = () => {
-      switch (tab()) {
-        case "feed":
-          return { myFeed: true };
-        case "all":
-          return {};
-        default:
-          return { tag: tab() };
-      }
-    },
-    handleSetPage = page => {
-      start(() => {
-        setPage(page);
-        loadArticles(getPredicate());
-      });
-    };
-
-  createEffect(() => start(() => loadArticles(getPredicate())));
-
+export default ({ appName, token, handleSetPage, tab, store }) => {
   return (
     <div class="home-page">
       {!token && (
@@ -40,7 +9,7 @@ export default () => {
           <div class="container">
             <h1
               class="logo-font"
-              textContent={/*@once*/ appName.toLowerCase()}
+              textContent={appName}
             />
             <p>A place to share your knowledge.</p>
           </div>
@@ -82,16 +51,12 @@ export default () => {
               </ul>
             </div>
 
-            <Suspense
-              fallback={<div class="article-preview">Loading articles...</div>}
-            >
-              <ArticleList
-                articles={Object.values(store.articles)}
-                totalPagesCount={store.totalPagesCount}
-                currentPage={store.page}
-                onSetPage={handleSetPage}
-              />
-            </Suspense>
+            <ArticleList
+              articles={Object.values(store.articles)}
+              totalPagesCount={store.totalPagesCount}
+              currentPage={store.page}
+              onSetPage={handleSetPage}
+            />
           </div>
 
           <div class="col-md-3">

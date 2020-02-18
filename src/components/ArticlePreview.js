@@ -26,7 +26,7 @@ export default ({ article }) => {
           <NavLink class="author" href={`@${username}`} route="profile">
             {username}
           </NavLink>
-          <span class="date">{new Date(createdAt).toDateString()}</span>
+          <span class="date" textContent={/*@once*/new Date(createdAt).toDateString()} />
         </div>
 
         {token && (

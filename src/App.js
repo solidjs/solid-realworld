@@ -1,13 +1,13 @@
 import { lazy } from "solid-js";
 import { useStore, useRouter } from "./store";
 import NavBar from "./components/NavBar";
+import Home from "./pages/Home";
+import Article from "./pages/Article";
+import Profile from "./pages/Profile";
 
-const Home = lazy(() => import("./components/Home")),
-  Editor = lazy(() => import("./components/Editor")),
-  Settings = lazy(() => import("./components/Settings")),
-  Auth = lazy(() => import("./components/Auth")),
-  Article = lazy(() => import("./components/Article")),
-  Profile = lazy(() => import("./components/Profile"));
+const Editor = lazy(() => import("./pages/Editor")),
+  Settings = lazy(() => import("./pages/Settings")),
+  Auth = lazy(() => import("./pages/Auth"));
 
 export default () => {
   const [store, { setAppLoaded, pullUser }] = useStore(),
