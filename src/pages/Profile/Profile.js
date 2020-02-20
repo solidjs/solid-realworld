@@ -2,9 +2,9 @@ import { useStore, useRouter } from "../../store";
 import NavLink from "../../components/NavLink";
 import ArticleList from "../../components/ArticleList";
 
-export default () => {
+export default ({ username }) => {
   const [store, { setPage, loadArticles, unfollow, follow }] = useStore(),
-    {} = useRouter(),
+    { location } = useRouter(),
     handleClick = ev => {
       ev.preventDefault();
       store.profile.following ? unfollow() : follow();
@@ -13,7 +13,7 @@ export default () => {
       setPage(page);
       loadArticles();
     },
-    isUser = store.currentUser && store.profile.username === store.currentUser.username;
+    isUser = store.currentUser && username === store.currentUser.username;
 
   return (
     <div class="profile-page">
@@ -22,7 +22,7 @@ export default () => {
           <div class="row">
             <div class="col-xs-12 col-md-10 offset-md-1">
               <img src={store.profile?.image} class="user-img" alt="" />
-              <h4>{store.profile?.username}</h4>
+              <h4>{username}</h4>
               <p>{store.profile?.bio}</p>
               {isUser && (
                 <NavLink
@@ -32,7 +32,7 @@ export default () => {
                   <i class="ion-gear-a" /> Edit Profile Settings
                 </NavLink>
               )}
-              {!isUser && (
+              {store.token && !isUser && (
                 <button
                   class="btn btn-sm action-btn"
                   classList={{
@@ -59,10 +59,8 @@ export default () => {
                 <li class="nav-item">
                   <NavLink
                     class="nav-link"
-                    isActive={(match, location) => {
-                      return location.pathname.match("/favorites") ? 0 : 1;
-                    }}
-                    to={`/@${store.profile?.username}`}
+                    active={location().includes("/favorites") ? 0 : 1}
+                    href={`@${username}`}
                   >
                     My Articles
                   </NavLink>
@@ -71,7 +69,8 @@ export default () => {
                 <li class="nav-item">
                   <NavLink
                     class="nav-link"
-                    to={`/@${store.profile?.username}/favorites`}
+                    active={location().includes("/favorites")}
+                    href={`@${username}/favorites`}
                   >
                     Favorited Articles
                   </NavLink>

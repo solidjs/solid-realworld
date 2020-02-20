@@ -21,7 +21,6 @@ const plugins = [
 
 export default {
   input: "src/index.js",
-  manualChunks: {vendor: ["solid-js", "solid-js/dom"]},
   output: {
     dir: "dist",
     format: "esm"

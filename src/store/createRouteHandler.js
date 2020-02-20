@@ -4,6 +4,7 @@ export default function createRouteHandler(init) {
   const [location, setLocation] = createSignal(
       window.location.hash.slice(2) || init
     ),
+    [read, triggerParams] = createSignal(),
     locationHandler = () => setLocation(window.location.hash.slice(2));
   let params;
   window.addEventListener("hashchange", locationHandler);
@@ -13,9 +14,12 @@ export default function createRouteHandler(init) {
     match: (name, test) => {
       const loc = location().split("?")[0];
       const match = test.exec(loc);
-      if (match) params = { params: match.slice(1), routeName: name };
+      if (match) {
+        params = { params: match.slice(1), routeName: name };
+        triggerParams();
+      }
       return !!match;
     },
-    getParams: () => params
+    getParams: () => (read(), params)
   };
 }
