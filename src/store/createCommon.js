@@ -7,7 +7,7 @@ export default function createCommon(agent, store, loadState, setState) {
   });
   createEffect(() => {
     if (state.token) {
-      window.localStorage.setItem("jwt", token);
+      window.localStorage.setItem("jwt", state.token);
     } else {
       window.localStorage.removeItem("jwt");
     }

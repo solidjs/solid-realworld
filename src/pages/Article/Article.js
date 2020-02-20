@@ -1,6 +1,7 @@
 import { createState } from "solid-js";
 import marked from "marked";
 import NavLink from "../../components/NavLink";
+import ListErrors from "../../components/ListErrors";
 import { useStore } from "../../store";
 
 const ArticleActions = props => {
@@ -107,7 +108,7 @@ const CommentInput = props => {
           class="form-control"
           placeholder="Write a comment..."
           value={state.body}
-          disabled={store.isCreatingComment}
+          disabled={state.isCreatingComment}
           onChange={handleBodyChange}
           rows="3"
         />
@@ -135,7 +136,7 @@ const CommentContainer = props => (
         </p>
       }
     >
-      <list-errors errors={props.errors} />
+      <ListErrors errors={props.errors} />
       <CommentInput slug={props.slug} currentUser={props.currentUser} />
     </Show>
     <For each={props.comments}>

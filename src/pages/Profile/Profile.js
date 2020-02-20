@@ -26,7 +26,7 @@ export default ({ username }) => {
               <p>{store.profile?.bio}</p>
               {isUser && (
                 <NavLink
-                  to="/settings"
+                  route="settings"
                   class="btn btn-sm btn-outline-secondary action-btn"
                 >
                   <i class="ion-gear-a" /> Edit Profile Settings
@@ -41,9 +41,7 @@ export default ({ username }) => {
                   }}
                   onClick={handleClick}
                 >
-                  <i class="ion-plus-round" />
-                  &nbsp;
-                  {store.profile?.following ? "Unfollow" : "Follow"} {store.profile?.username}
+                  <i class="ion-plus-round" /> {store.profile?.following ? "Unfollow" : "Follow"} {store.profile?.username}
                 </button>
               )}
             </div>

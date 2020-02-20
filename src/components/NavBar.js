@@ -35,17 +35,17 @@ export default () => {
           >
             <li class="nav-item">
               <NavLink class="nav-link" route="editor">
-                <i class="ion-compose"></i>&nbsp;New Post
+                <i class="ion-compose"></i> New Post
               </NavLink>
             </li>
             <li class="nav-item">
               <NavLink class="nav-link" route="settings">
-                <i class="ion-gear-a"></i>&nbsp;Settings
+                <i class="ion-gear-a"></i> Settings
               </NavLink>
             </li>
             <li class="nav-item">
               <NavLink class="nav-link" route="profile" href={`@${store.currentUser.username}`}>
-                <i class="ion-compose"></i>&nbsp;{store.currentUser}
+                {store.currentUser.username}
               </NavLink>
             </li>
           </Show>
