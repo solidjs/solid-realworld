@@ -8,13 +8,9 @@ export default function createUser(agent, store, loadState, setState) {
       return p;
     },
     async updateUser(newUser) {
-      setState({ updatingUser: true });
-      try {
-        const { user } = await agent.Auth.save(newUser);
-        setState({ currentUser: user });
-      } finally {
-        setState({ updatingUser: false });
-      }
+      const { user, errors } = await agent.Auth.save(newUser);
+      if (errors) throw errors;
+      setState({ currentUser: user });
     }
   };
 }

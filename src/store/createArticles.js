@@ -27,9 +27,7 @@ export default function createArticles(
         const article = state.articles[slug];
         if (article) return article;
       }
-      const p = agent.Articles.get(slug);
-      loadArticle({ [slug]: p });
-      return p;
+      loadArticle({ [slug]: agent.Articles.get(slug) });
     },
     async makeFavorite(slug) {
       const article = state.articles[slug];
@@ -39,7 +37,7 @@ export default function createArticles(
           favoritesCount: s.favoritesCount + 1
         }));
         try {
-          return await agent.Articles.favorite(slug);
+          await agent.Articles.favorite(slug);
         } catch (err) {
           setState("articles", slug, s => ({
             favorited: false,
@@ -57,7 +55,7 @@ export default function createArticles(
           favoritesCount: s.favoritesCount - 1
         }));
         try {
-          return await agent.Articles.unfavorite(slug);
+          await agent.Articles.unfavorite(slug);
         } catch (err) {
           setState("articles", slug, s => ({
             favorited: true,
@@ -81,7 +79,7 @@ export default function createArticles(
       const article = state.articles[slug];
       setState("articles", { [slug]: undefined });
       try {
-        return await agent.Articles.del(slug);
+        await agent.Articles.del(slug);
       } catch (err) {
         setState("articles", { [slug]: article });
         throw err;

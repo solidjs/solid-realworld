@@ -1,8 +1,9 @@
 export default function createEditor(store) {
-  store.actions = {
-    ...store.actions,
+  const [, actions] = store;
+  store[1] = {
+    ...actions,
     async loadInitialData(articleSlug) {
-      const article = await store.actions.loadArticle(articleSlug, {
+      const article = await actions.loadArticle(articleSlug, {
         acceptCached: true
       });
       if (!article) throw new Error("Can't load original article");
@@ -10,9 +11,8 @@ export default function createEditor(store) {
     },
     async submit(article) {
       await (article.slug
-        ? store.actions.updateArticle(article)
-        : store.actions.createArticle(article));
+        ? actions.updateArticle(article)
+        : actions.createArticle(article));
     }
   };
-  return store;
 }

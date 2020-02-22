@@ -28,7 +28,7 @@ export function Provider(props) {
   createArticles(agent, store, loadState, setState, loadArticles);
   createComments(agent, store, loadState, setState);
   createCommon(agent, store, loadState, setState);
-  // createEditor(store, setState);
+  createEditor(store, setState);
   createProfile(agent, store, loadState, setState);
   createUser(agent, store, loadState, setState);
   createAuth(agent, store, loadState, setState);
