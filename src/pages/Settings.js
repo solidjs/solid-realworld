@@ -20,7 +20,7 @@ export default () => {
       }
       setState({ updatingUser: true });
       updateUser(user)
-        .then(() => location.hash = `/@${user.username}`)
+        .then(() => (location.hash = `/@${user.username}`))
         .catch(errors => setState({ errors }))
         .finally(() => setState({ updatingUser: false }));
     };
@@ -41,6 +41,7 @@ export default () => {
                     placeholder="URL of profile picture"
                     value={state.image}
                     onChange={updateState("image")}
+                    disabled={state.updatingUser}
                   />
                 </fieldset>
                 <fieldset class="form-group">
@@ -50,6 +51,7 @@ export default () => {
                     placeholder="Your Name"
                     value={state.username}
                     onChange={updateState("username")}
+                    disabled={state.updatingUser}
                   />
                 </fieldset>
                 <fieldset class="form-group">
@@ -59,6 +61,7 @@ export default () => {
                     placeholder="Short bio about you"
                     value={state.bio}
                     onChange={updateState("bio")}
+                    disabled={state.updatingUser}
                   ></textarea>
                 </fieldset>
                 <fieldset class="form-group">
@@ -68,6 +71,7 @@ export default () => {
                     placeholder="Email"
                     value={state.email}
                     onChange={updateState("email")}
+                    disabled={state.updatingUser}
                   />
                 </fieldset>
                 <fieldset class="form-group">
@@ -77,6 +81,7 @@ export default () => {
                     placeholder="Password"
                     value={state.password}
                     onChange={updateState("password")}
+                    disabled={state.updatingUser}
                   />
                 </fieldset>
                 <button
@@ -88,10 +93,10 @@ export default () => {
                 </button>
               </fieldset>
             </form>
-            <hr/>
+            <hr />
             <button
               class="btn btn-outline-danger"
-              onClick={() => (logout(), location.hash = "/")}
+              onClick={() => (logout(), (location.hash = "/"))}
             >
               Or click here to logout.
             </button>

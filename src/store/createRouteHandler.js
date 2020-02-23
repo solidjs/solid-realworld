@@ -1,9 +1,7 @@
 import { createSignal, onCleanup } from "solid-js";
 
 export default function createRouteHandler(init) {
-  const [location, setLocation] = createSignal(
-      window.location.hash.slice(2) || init
-    ),
+  const [location, setLocation] = createSignal(window.location.hash.slice(2) || init),
     [read, triggerParams] = createSignal(),
     locationHandler = () => setLocation(window.location.hash.slice(2));
   let params;

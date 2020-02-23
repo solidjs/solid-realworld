@@ -4,9 +4,9 @@ import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
 import Article from "./pages/Article";
 import Profile from "./pages/Profile";
+import Editor from "./pages/Editor";
 
-const Editor = lazy(() => import("./pages/Editor")),
-  Settings = lazy(() => import("./pages/Settings")),
+const Settings = lazy(() => import("./pages/Settings")),
   Auth = lazy(() => import("./pages/Auth"));
 
 export default () => {
@@ -20,7 +20,7 @@ export default () => {
     <>
       <NavBar />
       <Show when={store.appLoaded}>
-        <Suspense fallback={"Loading..."}>
+          <Suspense fallback={<div class="container">Loading...</div>}>
           <Switch>
             <Match when={match("editor", /^editor\/?(.*)/)}><Editor {...getParams()} /></Match>
             <Match when={match("settings", /^settings/)}><Settings /></Match>

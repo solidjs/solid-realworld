@@ -1,12 +1,6 @@
 const LIMIT = 10;
 
-export default function createArticles(
-  agent,
-  store,
-  loadState,
-  setState,
-  loadArticle
-) {
+export default function createArticles(agent, store, loadState, setState, loadArticle) {
   const [state, actions] = store;
   store[1] = {
     ...actions,
@@ -66,12 +60,14 @@ export default function createArticles(
       }
     },
     async createArticle(newArticle) {
-      const { article } = await agent.Articles.create(newArticle);
+      const { article, errors } = await agent.Articles.create(newArticle);
+      if (errors) throw errors;
       setState("articles", { [article.slug]: article });
       return article;
     },
     async updateArticle(data) {
-      const { article } = await agent.Articles.update(data);
+      const { article, errors } = await agent.Articles.update(data);
+      if (errors) throw errors;
       setState("articles", { [article.slug]: article });
       return article;
     },
@@ -91,10 +87,8 @@ export default function createArticles(
     if (predicate.myFeed) return agent.Articles.feed(state.page, LIMIT);
     if (predicate.favoritedBy)
       return agent.Articles.favoritedBy(predicate.favoritedBy, state.page, LIMIT);
-    if (predicate.tag)
-      return agent.Articles.byTag(predicate.tag, state.page, LIMIT);
-    if (predicate.author)
-      return agent.Articles.byAuthor(predicate.author, state.page, LIMIT);
+    if (predicate.tag) return agent.Articles.byTag(predicate.tag, state.page, LIMIT);
+    if (predicate.author) return agent.Articles.byAuthor(predicate.author, state.page, LIMIT);
     return agent.Articles.all(state.page, LIMIT, predicate);
   }
 }

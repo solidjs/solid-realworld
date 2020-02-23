@@ -1,6 +1,6 @@
 export default function createAuth(agent, store, loadState, setState) {
-  const [, actions] = store;
-  store[1] = {
+  let [, actions] = store;
+  store[1] = actions = {
     ...actions,
     async login(email, password) {
       const { user, errors } = await agent.Auth.login(email, password);
@@ -16,6 +16,16 @@ export default function createAuth(agent, store, loadState, setState) {
     },
     logout() {
       setState({ token: undefined, currentUser: undefined });
+    },
+    pullUser() {
+      let p;
+      loadState({ currentUser: (p = agent.Auth.current()) });
+      return p;
+    },
+    async updateUser(newUser) {
+      const { user, errors } = await agent.Auth.save(newUser);
+      if (errors) throw errors;
+      setState({ currentUser: user });
     }
   };
 }

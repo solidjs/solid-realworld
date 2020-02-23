@@ -1,22 +1,20 @@
-import { useStore } from "../store";
 import NavLink from "./NavLink";
 
-const FAVORITED_CLASS = 'btn btn-sm btn-primary';
-const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary';
+const FAVORITED_CLASS = "btn btn-sm btn-primary";
+const NOT_FAVORITED_CLASS = "btn btn-sm btn-outline-primary";
 
-export default ({ article }) => {
-  const [{ token }, { unmakeFavorite, makeFavorite }] = useStore(),
-    { title, description, slug, createdAt, tagList, author: { username, image }} = article;
-
-  const handleClickFavorite = e => {
-    e.preventDefault();
-    article.favorited
-      ? unmakeFavorite(slug)
-      : makeFavorite(slug);
-  };
+export default ({ article, token, onClickFavorite }) => {
+  const {
+    title,
+    description,
+    slug,
+    createdAt,
+    tagList,
+    author: { username, image }
+  } = article;
 
   return (
-    <div class="article-preview">
+    <div class="article-preview" model={article}>
       <div class="article-meta">
         <NavLink href={`@${username}`} route="profile">
           <img src={image} alt="" />
@@ -26,14 +24,14 @@ export default ({ article }) => {
           <NavLink class="author" href={`@${username}`} route="profile">
             {username}
           </NavLink>
-          <span class="date" textContent={/*@once*/new Date(createdAt).toDateString()} />
+          <span class="date" textContent={/*@once*/ new Date(createdAt).toDateString()} />
         </div>
 
         {token && (
           <div class="pull-xs-right">
             <button
               class={article.favorited ? FAVORITED_CLASS : NOT_FAVORITED_CLASS}
-              onClick={handleClickFavorite}
+              onClick={onClickFavorite}
             >
               <i class="ion-heart" /> {article.favoritesCount}
             </button>

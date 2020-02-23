@@ -4,13 +4,12 @@ const Profile = lazy(() => import("./Profile"));
 
 export default function(props) {
   const [, { loadProfile, loadArticles }] = useStore(),
-    { location } = useRouter(),
-    username = props.params[0];
-  loadProfile(username);
+    { location } = useRouter();
+  createEffect(() => loadProfile(props.params[0]));
   createEffect(() =>
     location().includes("/favorites")
-      ? loadArticles({ favoritedBy: username })
-      : loadArticles({ author: username })
+      ? loadArticles({ favoritedBy: props.params[0] })
+      : loadArticles({ author: props.params[0] })
   );
-  return Profile({ username });
+  return <Profile username={props.params[0]} />;
 }

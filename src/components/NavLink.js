@@ -3,7 +3,7 @@ import { useTransition } from "solid-js";
 
 export default props => {
   const { getParams } = useRouter(),
-    [, start] = useTransition({ timeoutMs: 250 })
+    [, start] = useTransition({ timeoutMs: 250 });
   return (
     <a
       class={props.class}

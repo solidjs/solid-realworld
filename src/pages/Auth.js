@@ -33,7 +33,7 @@ export default () => {
             <p class="text-xs-center">{link}</p>
             <ListErrors errors={state.errors} />
             <form onSubmit={handleSubmit}>
-              { !isLogin && (
+              {!isLogin && (
                 <fieldset class="form-group">
                   <input
                     class="form-control form-control-lg"

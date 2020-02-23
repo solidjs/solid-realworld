@@ -1,6 +1,6 @@
 import { createEffect, createMemo, useTransition, lazy } from "solid-js";
 import { useStore, useRouter } from "../../store";
-const Home = lazy(() => import("./Home"))
+const Home = lazy(() => import("./Home"));
 
 export default function() {
   const [store, { loadArticles, setPage }] = useStore(),
@@ -12,7 +12,7 @@ export default function() {
       const query = new URLSearchParams(search);
       return query.get("tab");
     }),
-    [, start] = useTransition({ timeoutMs: 250 }),
+    [, start] = useTransition({ timeoutMs: 300 }),
     getPredicate = () => {
       switch (tab()) {
         case "feed":
@@ -32,5 +32,5 @@ export default function() {
 
   createEffect(() => start(() => loadArticles(getPredicate())));
 
-  return Home({ handleSetPage, appName: appName.toLowerCase(), token, tab, store })
+  return Home({ handleSetPage, appName: appName.toLowerCase(), token, tab, store });
 }

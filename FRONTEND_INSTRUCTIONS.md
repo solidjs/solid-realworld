@@ -47,7 +47,7 @@ Alternatively, if you want to make modifications to the theme, check out the [th
   - [Settings](#settings)
   - [Create/Edit Article](#createedit-article)
   - [Article](#article)
-  
+
 
 ## Layout
 

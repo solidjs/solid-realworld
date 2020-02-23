@@ -11,17 +11,16 @@ export default function createComments(agent, store, loadState, setState) {
       loadState({ comments: agent.Comments.forArticle(articleSlug) });
     },
     async createComment(comment) {
-      await agent.Comments.create(state.articleSlug, comment);
-      actions.loadComments(state.articleSlug);
+      const { errors } = await agent.Comments.create(state.articleSlug, comment);
+      if (errors) throw errors;
     },
     async deleteComment(id) {
       const idx = state.comments.findIndex(c => c.id === id);
-      if (idx > -1)
-        setState("comments", s => [...s.slice(0, idx), ...s.slice(idx + 1)]);
+      if (idx > -1) setState("comments", s => [...s.slice(0, idx), ...s.slice(idx + 1)]);
       try {
         await agent.Comments.delete(state.articleSlug, id);
       } catch (err) {
-        actions.loadComments(state.articleSlug);
+        store[1].loadComments(state.articleSlug);
         throw err;
       }
     }

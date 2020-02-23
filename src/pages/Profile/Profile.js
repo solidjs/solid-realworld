@@ -2,7 +2,7 @@ import { useStore, useRouter } from "../../store";
 import NavLink from "../../components/NavLink";
 import ArticleList from "../../components/ArticleList";
 
-export default ({ username }) => {
+export default props => {
   const [store, { setPage, loadArticles, unfollow, follow }] = useStore(),
     { location } = useRouter(),
     handleClick = ev => {
@@ -13,7 +13,7 @@ export default ({ username }) => {
       setPage(page);
       loadArticles();
     },
-    isUser = store.currentUser && username === store.currentUser.username;
+    isUser = () => store.currentUser && props.username === store.currentUser.username;
 
   return (
     <div class="profile-page">
@@ -22,17 +22,14 @@ export default ({ username }) => {
           <div class="row">
             <div class="col-xs-12 col-md-10 offset-md-1">
               <img src={store.profile?.image} class="user-img" alt="" />
-              <h4>{username}</h4>
+              <h4 textContent={props.username} />
               <p>{store.profile?.bio}</p>
-              {isUser && (
-                <NavLink
-                  route="settings"
-                  class="btn btn-sm btn-outline-secondary action-btn"
-                >
+              {isUser() && (
+                <NavLink route="settings" class="btn btn-sm btn-outline-secondary action-btn">
                   <i class="ion-gear-a" /> Edit Profile Settings
                 </NavLink>
               )}
-              {store.token && !isUser && (
+              {store.token && !isUser() && (
                 <button
                   class="btn btn-sm action-btn"
                   classList={{
@@ -41,7 +38,8 @@ export default ({ username }) => {
                   }}
                   onClick={handleClick}
                 >
-                  <i class="ion-plus-round" /> {store.profile?.following ? "Unfollow" : "Follow"} {store.profile?.username}
+                  <i class="ion-plus-round" /> {store.profile?.following ? "Unfollow" : "Follow"}{" "}
+                  {store.profile?.username}
                 </button>
               )}
             </div>
@@ -58,7 +56,7 @@ export default ({ username }) => {
                   <NavLink
                     class="nav-link"
                     active={location().includes("/favorites") ? 0 : 1}
-                    href={`@${username}`}
+                    href={`@${props.username}`}
                   >
                     My Articles
                   </NavLink>
@@ -68,7 +66,7 @@ export default ({ username }) => {
                   <NavLink
                     class="nav-link"
                     active={location().includes("/favorites")}
-                    href={`@${username}/favorites`}
+                    href={`@${props.username}/favorites`}
                   >
                     Favorited Articles
                   </NavLink>

@@ -4,17 +4,12 @@ import ArticleList from "../../components/ArticleList";
 export default ({ appName, token, handleSetPage, tab, store }) => {
   return (
     <div class="home-page">
-      {!token && (
-        <div class="banner">
-          <div class="container">
-            <h1
-              class="logo-font"
-              textContent={appName}
-            />
-            <p>A place to share your knowledge.</p>
-          </div>
+      <div class="banner">
+        <div class="container">
+          <h1 class="logo-font" textContent={appName} />
+          <p>A place to share your knowledge.</p>
         </div>
-      )}
+      </div>
 
       <div class="container page">
         <div class="row">
@@ -23,21 +18,13 @@ export default ({ appName, token, handleSetPage, tab, store }) => {
               <ul class="nav nav-pills outline-active">
                 {token && (
                   <li class="nav-item">
-                    <NavLink
-                      class="nav-link"
-                      href="?tab=feed"
-                      active={tab() === "feed"}
-                    >
+                    <NavLink class="nav-link" href="?tab=feed" active={tab() === "feed"}>
                       Your Feed
                     </NavLink>
                   </li>
                 )}
                 <li class="nav-item">
-                  <NavLink
-                    class="nav-link"
-                    href="?tab=all"
-                    active={tab() === "all"}
-                  >
+                  <NavLink class="nav-link" href="?tab=all" active={tab() === "all"}>
                     Global Feed
                   </NavLink>
                 </li>
