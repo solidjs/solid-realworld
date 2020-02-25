@@ -15,9 +15,8 @@ export default () => {
     submitForn = ev => {
       ev.preventDefault();
       const user = Object.assign({}, state);
-      if (!user.password) {
-        delete user.password;
-      }
+      if (!user.password) delete user.password;
+      if (!user.image) delete user.image;
       setState({ updatingUser: true });
       updateUser(user)
         .then(() => (location.hash = `/@${user.username}`))

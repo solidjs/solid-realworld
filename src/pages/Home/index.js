@@ -12,7 +12,7 @@ export default function() {
       const query = new URLSearchParams(search);
       return query.get("tab");
     }),
-    [, start] = useTransition({ timeoutMs: 300 }),
+    [, start] = useTransition({ timeoutMs: 250 }),
     getPredicate = () => {
       switch (tab()) {
         case "feed":
@@ -32,5 +32,5 @@ export default function() {
 
   createEffect(() => start(() => loadArticles(getPredicate())));
 
-  return Home({ handleSetPage, appName: appName.toLowerCase(), token, tab, store });
+  return Home({ handleSetPage, appName, token, tab, store });
 }

@@ -1,4 +1,4 @@
-import { lazy } from "solid-js";
+import { lazy, createSignal } from "solid-js";
 import { useStore, useRouter } from "./store";
 import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
@@ -10,16 +10,17 @@ const Settings = lazy(() => import("./pages/Settings")),
   Auth = lazy(() => import("./pages/Auth"));
 
 export default () => {
-  const [store, { setAppLoaded, pullUser }] = useStore(),
+  const [store, { pullUser }] = useStore(),
+    [appLoaded, setAppLoaded] = createSignal(false),
     { match, getParams } = useRouter();
 
-  if (!store.token) setAppLoaded();
-  else pullUser().finally(() => setAppLoaded());
+  if (!store.token) setAppLoaded(true);
+  else pullUser().finally(() => setAppLoaded(true));
 
   return (
     <>
       <NavBar />
-      <Show when={store.appLoaded}>
+      <Show when={appLoaded()}>
           <Suspense fallback={<div class="container">Loading...</div>}>
           <Switch>
             <Match when={match("editor", /^editor\/?(.*)/)}><Editor {...getParams()} /></Match>

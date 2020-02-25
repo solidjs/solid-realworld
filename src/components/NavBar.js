@@ -8,7 +8,7 @@ export default () => {
     <nav class="navbar navbar-light">
       <div class="container">
         <NavLink class="navbar-brand" route="">
-          {store.appName.toLowerCase()}
+          {store.appName}
         </NavLink>
         <ul class="nav navbar-nav pull-xs-right">
           <li class="nav-item">
@@ -35,12 +35,12 @@ export default () => {
           >
             <li class="nav-item">
               <NavLink class="nav-link" route="editor">
-                <i class="ion-compose"></i> New Post
+                <i class="ion-compose" /> New Post
               </NavLink>
             </li>
             <li class="nav-item">
               <NavLink class="nav-link" route="settings">
-                <i class="ion-gear-a"></i> Settings
+                <i class="ion-gear-a" /> Settings
               </NavLink>
             </li>
             <li class="nav-item">

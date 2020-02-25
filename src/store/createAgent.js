@@ -16,7 +16,6 @@ export default function createAgent([state, actions]) {
 
     try {
       const response = await fetch(API_ROOT + url, opts);
-      // if (response.status !== 200) throw response;
       const json = await response.json();
       return resKey ? json[resKey] : json;
     } catch (err) {

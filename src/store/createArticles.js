@@ -4,7 +4,6 @@ export default function createArticles(agent, store, loadState, setState, loadAr
   const [state, actions] = store;
   store[1] = {
     ...actions,
-    clear: () => setState({ articles: {}, page: 0 }),
     setPage: page => setState({ page }),
     loadArticles(predicate) {
       const articles = $req(predicate).then(({ articles, articlesCount }) => {

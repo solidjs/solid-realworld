@@ -6,19 +6,12 @@ export default function createCommon(agent, store, loadState, setState) {
     tags: agent.Tags.getAll().then(tags => tags.map(t => t.toLowerCase()))
   });
   createEffect(() => {
-    if (state.token) {
-      window.localStorage.setItem("jwt", state.token);
-    } else {
-      window.localStorage.removeItem("jwt");
-    }
+    state.token ? localStorage.setItem("jwt", state.token) : localStorage.removeItem("jwt");
   });
   store[1] = {
     ...actions,
     setToken(token) {
       setState({ token });
-    },
-    setAppLoaded() {
-      setState("appLoaded", true);
     }
   };
 }

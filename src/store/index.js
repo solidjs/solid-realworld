@@ -15,9 +15,8 @@ export function Provider(props) {
       articles,
       page: 0,
       totalPagesCount: 0,
-      token: window.localStorage.getItem("jwt"),
-      appName: "Conduit",
-      appLoaded: false
+      token: localStorage.getItem("jwt"),
+      appName: "conduit"
     }),
     store = [state, {}],
     router = createRouteHandler(""),

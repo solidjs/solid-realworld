@@ -25,7 +25,7 @@
   "homepage": "https://github.com/ryansolid/solid-realworld#readme",
   "dependencies": {
     "marked": "^0.8.0",
-    "solid-js": "0.16.8"
+    "solid-js": "0.16.9"
   },
   "devDependencies": {
     "@babel/core": "7.8.4",

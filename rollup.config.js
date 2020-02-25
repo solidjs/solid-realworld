@@ -16,7 +16,7 @@ const plugins = [
   }),
   resolve({ extensions: [".js", ".jsx"] }),
   commonjs(),
-  terser()
+  process.env.production && terser()
 ];
 
 export default {

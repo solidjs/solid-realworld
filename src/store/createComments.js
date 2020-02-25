@@ -1,8 +1,8 @@
 import { createState } from "solid-js";
 
 export default function createComments(agent, store, loadState, setState) {
-  const [state, actions] = store;
-  store[1] = {
+  let [state, actions] = store;
+  store[1] = actions = {
     ...actions,
     loadComments(articleSlug) {
       if (state.articleSlug !== articleSlug) {
@@ -15,12 +15,11 @@ export default function createComments(agent, store, loadState, setState) {
       if (errors) throw errors;
     },
     async deleteComment(id) {
-      const idx = state.comments.findIndex(c => c.id === id);
-      if (idx > -1) setState("comments", s => [...s.slice(0, idx), ...s.slice(idx + 1)]);
+      setState("comments", cs => cs.filter(c => c.id !== id));
       try {
         await agent.Comments.delete(state.articleSlug, id);
       } catch (err) {
-        store[1].loadComments(state.articleSlug);
+        actions.loadComments(state.articleSlug);
         throw err;
       }
     }
