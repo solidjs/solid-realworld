@@ -1,12 +1,12 @@
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import babel from "rollup-plugin-babel";
-import clear from "rollup-plugin-clear";
+import del from "rollup-plugin-delete";
 import { terser } from "rollup-plugin-terser";
 
 const plugins = [
-  clear({
-    targets: ["dist"],
+  del({
+    targets: ["public/*", "!public/index.html"],
     watch: true
   }),
   babel({

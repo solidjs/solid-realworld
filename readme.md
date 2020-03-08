@@ -22,5 +22,5 @@ To run locally during development:
 
 To create a production build:
 
-- `npm run build` creates a development build, with all source compiled into ./dist/ folder
+- `npm run build` creates a development build, with all source compiled into ./public/ folder
 
