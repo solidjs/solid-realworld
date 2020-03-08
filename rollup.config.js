@@ -22,7 +22,7 @@ const plugins = [
 export default {
   input: "src/index.js",
   output: {
-    dir: "dist",
+    dir: "public",
     format: "esm"
   },
   plugins
