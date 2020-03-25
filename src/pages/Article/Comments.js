@@ -12,7 +12,7 @@ const Comment = ({ comment, currentUser, onDelete }) => {
       createdAt
     } = comment;
   return (
-    <div class="card" model={id}>
+    <div class="card">
       <div class="card-block">
         <p class="card-text" textContent={body} />
       </div>
@@ -27,7 +27,7 @@ const Comment = ({ comment, currentUser, onDelete }) => {
         <span class="date-posted">{new Date(createdAt).toDateString()}</span>
         {show && (
           <span class="mod-options">
-            <i class="ion-trash-a" onClick={onDelete} />
+            <i class="ion-trash-a" onClick={[onDelete, id]} />
           </span>
         )}
       </div>
@@ -78,7 +78,7 @@ const CommentInput = ({ slug, createComment, loadComments, currentUser }) => {
 export default () => {
   const [store, { createComment, deleteComment, loadComments }] = useStore(),
     { currentUser, articleSlug } = store,
-    handleDeleteComment = (e, commentId) => deleteComment(commentId);
+    handleDeleteComment = commentId => deleteComment(commentId);
   return (
     <div class="col-xs-12 col-md-8 offset-md-2">
       {currentUser ? (

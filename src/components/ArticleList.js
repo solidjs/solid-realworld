@@ -3,11 +3,11 @@ import ArticlePreview from "./ArticlePreview";
 
 export default props => {
   const [{ token }, { unmakeFavorite, makeFavorite }] = useStore(),
-    handleClickFavorite = (e, article) => {
+    handleClickFavorite = (article, e) => {
       e.preventDefault();
       article.favorited ? unmakeFavorite(slug) : makeFavorite(slug);
     },
-    handlePage = (e, v) => {
+    handlePage = (v, e) => {
       e.preventDefault();
       props.onSetPage(v);
       setTimeout(() => window.scrollTo(0, 0), 200);
@@ -28,10 +28,9 @@ export default props => {
             <For each={[...Array(props.totalPagesCount).keys()]}>
               {v => (
                 <li
-                  model={v}
                   class="page-item"
                   classList={{ active: props.currentPage === v }}
-                  onClick={handlePage}
+                  onClick={[handlePage, v]}
                 >
                   <a class="page-link" href="" textContent={v + 1} />
                 </li>

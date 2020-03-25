@@ -14,7 +14,7 @@ export default ({ article, token, onClickFavorite }) => {
   } = article;
 
   return (
-    <div class="article-preview" model={article}>
+    <div class="article-preview">
       <div class="article-meta">
         <NavLink href={`@${username}`} route="profile">
           <img src={image} alt="" />
@@ -31,7 +31,7 @@ export default ({ article, token, onClickFavorite }) => {
           <div class="pull-xs-right">
             <button
               class={article.favorited ? FAVORITED_CLASS : NOT_FAVORITED_CLASS}
-              onClick={onClickFavorite}
+              onClick={[onClickFavorite, article]}
             >
               <i class="ion-heart" /> {article.favoritesCount}
             </button>

@@ -14,7 +14,7 @@ export default ({ slug }) => {
         });
       }
     },
-    handleRemoveTag = (ev, tag) => {
+    handleRemoveTag = tag => {
       !state.inProgress && setState("tagList", tags => tags.filter(t => t !== tag));
     },
     handleTagInputKeyDown = ev => {
@@ -96,8 +96,8 @@ export default ({ slug }) => {
                   <div class="tag-list">
                     <For each={state.tagList}>
                       {tag => (
-                        <span class="tag-default tag-pill" model={tag}>
-                          <i class="ion-close-round" onClick={handleRemoveTag} />
+                        <span class="tag-default tag-pill">
+                          <i class="ion-close-round" onClick={[handleRemoveTag, tag]} />
                           {tag}
                         </span>
                       )}
