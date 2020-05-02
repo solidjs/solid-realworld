@@ -25,5 +25,6 @@ export default {
     dir: "public",
     format: "esm"
   },
+  preserveEntrySignatures: false,
   plugins
 };
