@@ -8,7 +8,7 @@ export default function createComments(agent, store, loadState, setState) {
       if (state.articleSlug !== articleSlug) {
         setState({ articleSlug });
       }
-      loadState({ comments: agent.Comments.forArticle(articleSlug) });
+      loadState({ comments: () => agent.Comments.forArticle(articleSlug) });
     },
     async createComment(comment) {
       const { errors } = await agent.Comments.create(state.articleSlug, comment);

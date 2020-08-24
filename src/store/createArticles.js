@@ -6,7 +6,7 @@ export default function createArticles(agent, store, loadState, setState, loadAr
     ...actions,
     setPage: page => setState({ page }),
     loadArticles(predicate) {
-      const articles = $req(predicate).then(({ articles, articlesCount }) => {
+      const articles = () => $req(predicate).then(({ articles, articlesCount }) => {
         setState({ totalPagesCount: Math.ceil(articlesCount / LIMIT) });
         return articles.reduce((memo, article) => {
           memo[article.slug] = article;
@@ -20,7 +20,7 @@ export default function createArticles(agent, store, loadState, setState, loadAr
         const article = state.articles[slug];
         if (article) return article;
       }
-      loadArticle({ [slug]: agent.Articles.get(slug) });
+      loadArticle({ [slug]: () => agent.Articles.get(slug) });
     },
     async makeFavorite(slug) {
       const article = state.articles[slug];

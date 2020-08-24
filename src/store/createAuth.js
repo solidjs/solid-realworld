@@ -19,7 +19,7 @@ export default function createAuth(agent, store, loadState, setState) {
     },
     pullUser() {
       let p;
-      loadState({ currentUser: (p = agent.Auth.current()) });
+      loadState({ currentUser: () => (p = agent.Auth.current()) });
       return p;
     },
     async updateUser(newUser) {

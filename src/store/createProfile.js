@@ -3,7 +3,7 @@ export default function createProfile(agent, store, loadState, setState) {
   store[1] = {
     ...actions,
     loadProfile(username) {
-      loadState({ profile: agent.Profile.get(username) });
+      loadState({ profile: () => agent.Profile.get(username) });
     },
     async follow() {
       if (state.profile && !state.profile.following) {
