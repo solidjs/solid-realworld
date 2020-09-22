@@ -3,6 +3,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import babel from "@rollup/plugin-babel";
 import del from "rollup-plugin-delete";
 import { terser } from "rollup-plugin-terser";
+import purgecss from 'rollup-plugin-purgecss';
 
 const plugins = [
   del({
@@ -16,7 +17,10 @@ const plugins = [
   }),
   resolve({ extensions: [".js", ".jsx"] }),
   commonjs(),
-  process.env.production && terser()
+  process.env.production && terser(),
+  process.env.production && purgecss({
+    content: ["public/index.html"]
+  })
 ];
 
 export default {
