@@ -2,10 +2,11 @@
   "name": "solid-realworld",
   "version": "0.0.0",
   "description": "A Solid Implementation of the Realworld Example App",
-  "main": "dist/index.js",
+  "main": "./dist/index.html",
   "scripts": {
-    "start": "serve public -l 5000 -s & rollup -w -c",
-    "build": "rollup -c --environment production",
+    "start": "parcel serve --target main ./index.html",
+    "build": "parcel build --target main ./index.html && npm run serve",
+    "serve": "serve dist -l 1234 -s",
     "test": "test"
   },
   "repository": {
@@ -31,15 +32,19 @@
     "@babel/core": "7.11.4",
     "@babel/plugin-proposal-optional-chaining": "7.11.0",
     "@babel/plugin-syntax-dynamic-import": "7.8.3",
-    "@rollup/plugin-commonjs": "15.0.0",
-    "@rollup/plugin-node-resolve": "8.1.0",
     "babel-preset-solid": "0.19.0",
     "bootstrap": "^4.5.2",
-    "rollup": "2.26.5",
-    "@rollup/plugin-babel": "5.2.0",
-    "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-purgecss": "^1.0.0",
-    "rollup-plugin-terser": "^7.0.0",
+    "parcel": "^2.0.0-beta.1",
+    "parcel-plugin-purgecss": "^3.0.0",
     "serve": "^11.3.2"
+  },
+  "targets": {
+    "main": {
+      "context": "browser",
+      "engines": {
+        "browsers": "Chrome 70"
+      },
+      "includeNodeModules": true
+    }
   }
 }
