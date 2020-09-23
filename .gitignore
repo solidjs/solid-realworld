@@ -1,6 +1,8 @@
 public/*
 !public/index.html
 
+dist
+.parcel-cache
 
 # dependencies
 /node_modules
