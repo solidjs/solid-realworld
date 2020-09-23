@@ -1,9 +1,7 @@
 {
   "plugins": {
-    "@fullhuman/postcss-purgecss": {
-      content: ["./index.html", "src/**/*.js"],
-      css: ["./styles/style.css"],
-      safelist: []
+    "postcss-uncss": {
+      html: ["./index.html"],
     }
   }
 }
