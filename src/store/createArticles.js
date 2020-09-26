@@ -6,8 +6,9 @@ export default function createArticles(agent, store, loadState, setState, loadAr
     ...actions,
     setPage: page => setState({ page }),
     loadArticles(predicate) {
+      if (!predicate) return;
       const articles = () => $req(predicate).then(({ articles, articlesCount }) => {
-        setState({ totalPagesCount: Math.ceil(articlesCount / LIMIT) });
+        queueMicrotask(() => setState({ totalPagesCount: Math.ceil(articlesCount / LIMIT) }));
         return articles.reduce((memo, article) => {
           memo[article.slug] = article;
           return memo;

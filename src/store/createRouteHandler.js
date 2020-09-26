@@ -1,9 +1,10 @@
-import { createSignal, onCleanup } from "solid-js";
+import { createSignal, onCleanup, useTransition } from "solid-js";
 
 export default function createRouteHandler(init) {
   const [location, setLocation] = createSignal(window.location.hash.slice(2) || init),
     [read, triggerParams] = createSignal(),
-    locationHandler = () => setLocation(window.location.hash.slice(2));
+    [, start] = useTransition(),
+    locationHandler = () => start(() => setLocation(window.location.hash.slice(2)));
   let params;
   window.addEventListener("hashchange", locationHandler);
   onCleanup(() => window.removeEventListener("hashchange", locationHandler));

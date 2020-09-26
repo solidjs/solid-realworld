@@ -1,4 +1,4 @@
-import { createState, useTransition } from "solid-js";
+import { createState } from "solid-js";
 import NavLink from "../../components/NavLink";
 import ListErrors from "../../components/ListErrors";
 import { useStore } from "../../store";
@@ -38,14 +38,13 @@ const Comment = ({ comment, currentUser, onDelete }) => {
 const CommentInput = ({ slug, createComment, loadComments, currentUser }) => {
   const [state, setState] = createState({ body: "" }),
     handleBodyChange = ev => setState({ body: ev.target.value }),
-    [, start] = useTransition({ timeoutMs: 500 }),
     createCommentHandler = ev => {
       ev.preventDefault();
       setState({ isCreatingComment: true });
       createComment({ body: state.body })
         .then(() => {
           setState({ body: "" });
-          start(() => loadComments(slug));
+          loadComments(slug);
         })
         .catch(errors => setState({ errors }))
         .finally(() => setState({ isCreatingComment: false }));

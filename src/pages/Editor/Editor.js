@@ -1,4 +1,4 @@
-import { createState, createEffect } from "solid-js";
+import { createState, createComputed } from "solid-js";
 import { useStore } from "../../store";
 import ListErrors from "../../components/ListErrors";
 
@@ -38,7 +38,7 @@ export default ({ slug }) => {
         .catch(errors => setState({ errors }))
         .finally(() => setState({ inProgress: false }));
     };
-  createEffect(() => {
+  createComputed(() => {
     let article;
     if (!slug || !(article = store.articles[slug])) return;
     setState(article);

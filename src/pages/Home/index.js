@@ -1,4 +1,4 @@
-import { createEffect, createMemo, useTransition, lazy } from "solid-js";
+import { createComputed, createMemo, useTransition, lazy } from "solid-js";
 import { useStore, useRouter } from "../../store";
 const Home = lazy(() => import("./Home"));
 
@@ -7,18 +7,21 @@ export default function() {
     { token, appName } = store,
     { location } = useRouter(),
     tab = createMemo(() => {
-      const search = location().split("?")[1];
+      const [url, search] = location().split("?");
+      if (url) return;
       if (!search) return token ? "feed" : "all";
       const query = new URLSearchParams(search);
       return query.get("tab");
     }),
-    [, start] = useTransition({ timeoutMs: 250 }),
+    [, start] = useTransition(),
     getPredicate = () => {
       switch (tab()) {
         case "feed":
           return { myFeed: true };
         case "all":
           return {};
+        case undefined:
+          return undefined;
         default:
           return { tag: tab() };
       }
@@ -30,7 +33,7 @@ export default function() {
       });
     };
 
-  createEffect(() => start(() => loadArticles(getPredicate())));
+  createComputed(() => loadArticles(getPredicate()));
 
   return Home({ handleSetPage, appName, token, tab, store });
 }
