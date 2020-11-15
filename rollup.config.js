@@ -11,6 +11,7 @@ const plugins = [
   }),
   babel({
     exclude: "node_modules/**",
+    babelHelpers: "bundled",
     presets: ["solid"],
     plugins: ["@babel/syntax-dynamic-import", "@babel/plugin-proposal-optional-chaining"]
   }),
