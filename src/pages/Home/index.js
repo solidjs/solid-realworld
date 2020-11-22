@@ -7,8 +7,7 @@ export default function() {
     { token, appName } = store,
     { location } = useRouter(),
     tab = createMemo(() => {
-      const [url, search] = location().split("?");
-      if (url) return;
+      const search = location().split("?")[1];
       if (!search) return token ? "feed" : "all";
       const query = new URLSearchParams(search);
       return query.get("tab");
