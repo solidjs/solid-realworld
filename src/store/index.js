@@ -1,4 +1,4 @@
-import { createResourceState, createContext, useContext } from "solid-js";
+import { createContext, useContext, createState } from "solid-js";
 import createAgent from "./createAgent";
 import createArticles from "./createArticles";
 import createAuth from "./createAuth";
@@ -10,23 +10,38 @@ import createRouteHandler from "./createRouteHandler";
 const StoreContext = createContext();
 const RouterContext = createContext();
 export function Provider(props) {
-  const [articles, loadArticles] = createResourceState(),
-    [state, loadState, setState] = createResourceState({
-      articles,
+  let articles, comments, tags, profile, currentUser;
+  const router = createRouteHandler(""),
+    [state, setState] = createState({
+      get articles() {
+        return articles();
+      },
+      get comments() {
+        return comments();
+      },
+      get tags() {
+        return tags();
+      },
+      get profile() {
+        return profile();
+      },
+      get currentUser() {
+        return currentUser();
+      },
       page: 0,
       totalPagesCount: 0,
       token: localStorage.getItem("jwt"),
       appName: "conduit"
     }),
-    store = [state, {}],
-    router = createRouteHandler(""),
+    actions = {},
+    store = [state, actions],
     agent = createAgent(store);
 
-  createArticles(agent, store, loadState, setState, loadArticles);
-  createComments(agent, store, loadState, setState);
-  createCommon(agent, store, loadState, setState);
-  createProfile(agent, store, loadState, setState);
-  createAuth(agent, store, loadState, setState);
+  articles = createArticles(agent, actions, state, setState);
+  comments = createComments(agent, actions, state, setState);
+  tags = createCommon(agent, actions, state, setState);
+  profile = createProfile(agent, actions, state, setState);
+  currentUser = createAuth(agent, actions, setState);
 
   return (
     <RouterContext.Provider value={router}>

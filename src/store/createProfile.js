@@ -1,10 +1,10 @@
-export default function createProfile(agent, store, loadState, setState) {
-  const [state, actions] = store;
-  store[1] = {
-    ...actions,
-    loadProfile(username) {
-      loadState({ profile: () => agent.Profile.get(username) });
-    },
+import { createSignal, createResource } from "solid-js";
+
+export default function createProfile(agent, actions, state, setState) {
+  const [username, setUsername] = createSignal();
+  const [profile] = createResource(username, agent.Profile.get);
+  Object.assign(actions, {
+    loadProfile: setUsername,
     async follow() {
       if (state.profile && !state.profile.following) {
         setState("profile", "following", true);
@@ -25,5 +25,6 @@ export default function createProfile(agent, store, loadState, setState) {
         }
       }
     }
-  };
+  });
+  return profile;
 }

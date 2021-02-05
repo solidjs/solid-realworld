@@ -1,31 +1,33 @@
-export default function createAuth(agent, store, loadState, setState) {
-  let [, actions] = store;
-  store[1] = actions = {
-    ...actions,
+import { createSignal, createResource, batch } from "solid-js";
+
+export default function createAuth(agent, actions, setState) {
+  const [loggedIn, setLoggedIn] = createSignal(false),
+    [currentUser, { mutate }] = createResource(loggedIn, agent.Auth.current);
+  Object.assign(actions, {
+    pullUser: () => setLoggedIn(true),
     async login(email, password) {
       const { user, errors } = await agent.Auth.login(email, password);
       if (errors) throw errors;
       actions.setToken(user.token);
-      actions.pullUser();
+      setLoggedIn(true);
     },
     async register(username, email, password) {
       const { user, errors } = await agent.Auth.register(username, email, password);
       if (errors) throw errors;
       actions.setToken(user.token);
-      actions.pullUser();
+      setLoggedIn(true);
     },
     logout() {
-      setState({ token: undefined, currentUser: undefined });
-    },
-    pullUser() {
-      let p;
-      loadState({ currentUser: () => (p = agent.Auth.current()) });
-      return p;
+      batch(() => {
+        setState({ token: undefined });
+        mutate(undefined);
+      })
     },
     async updateUser(newUser) {
       const { user, errors } = await agent.Auth.save(newUser);
       if (errors) throw errors;
-      setState({ currentUser: user });
+      mutate(user);
     }
-  };
+  });
+  return currentUser;
 }

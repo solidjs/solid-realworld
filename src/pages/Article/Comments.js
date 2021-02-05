@@ -44,7 +44,7 @@ const CommentInput = ({ slug, createComment, loadComments, currentUser }) => {
       createComment({ body: state.body })
         .then(() => {
           setState({ body: "" });
-          loadComments(slug);
+          loadComments(slug, true);
         })
         .catch(errors => setState({ errors }))
         .finally(() => setState({ isCreatingComment: false }));
