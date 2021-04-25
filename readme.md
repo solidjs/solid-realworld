@@ -3,7 +3,7 @@
 > ### Solid.js codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
 
 
-### [Demo](https://ryansolid.github.io/solid-realworld)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/ryansolid/solid-realworld)
+### [Demo](https://solidui.github.io/solid-realworld)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/solidui/solid-realworld)
 
 
 This codebase was created to demonstrate a fully fledged fullstack application built with Solid.js including CRUD operations, authentication, routing, pagination, and more.
