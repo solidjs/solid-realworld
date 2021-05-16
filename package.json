@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/solidui/solid-realworld.git"
+    "url": "git+https://github.com/solidjs/solid-realworld.git"
   },
   "keywords": [
     "Solid",
@@ -20,9 +20,9 @@
   "author": "Ryan Carniato",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/solidui/solid-realworld/issues"
+    "url": "https://github.com/solidjs/solid-realworld/issues"
   },
-  "homepage": "https://github.com/solidui/solid-realworld#readme",
+  "homepage": "https://github.com/solidjs/solid-realworld#readme",
   "dependencies": {
     "marked": "^0.8.0",
     "solid-js": "0.24.0"
