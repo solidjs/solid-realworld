@@ -1,10 +1,11 @@
-import { createState, createComputed } from "solid-js";
+import { createComputed } from "solid-js"
+import { createStore } from "solid-js/store";
 import { useStore } from "../../store";
 import ListErrors from "../../components/ListErrors";
 
 export default ({ slug }) => {
   const [store, { createArticle, updateArticle }] = useStore(),
-    [state, setState] = createState({ tagInput: "", tagList: [] }),
+    [state, setState] = createStore({ tagInput: "", tagList: [] }),
     updateState = field => ev => setState(field, ev.target.value),
     handleAddTag = () => {
       if (state.tagInput) {

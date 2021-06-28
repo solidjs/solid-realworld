@@ -19,7 +19,7 @@ export default function createArticles(agent, actions, state, setState) {
       if (article) return prev();
       return agent.Articles.get(args[1]).then((article) => ({ ...prev(), [args[1]]: article }));
     },
-    {}
+    { initialValue: {} }
   );
 
   function $req(predicate) {

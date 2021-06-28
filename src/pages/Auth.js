@@ -1,10 +1,10 @@
-import { createState } from "solid-js";
+import { createStore } from "solid-js/store";
 import NavLink from "../components/NavLink";
 import ListErrors from "../components/ListErrors";
 import { useStore } from "../store";
 
 export default () => {
-  const [state, setState] = createState({ username: "", inProgress: false }),
+  const [state, setState] = createStore({ username: "", inProgress: false }),
     [, { register, login }] = useStore(),
     isLogin = location.hash.includes("login"),
     text = isLogin ? "Sign in" : "Sign up",

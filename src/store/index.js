@@ -1,4 +1,5 @@
-import { createContext, useContext, createState } from "solid-js";
+import { createContext, useContext } from "solid-js";
+import { createStore } from "solid-js/store";
 import createAgent from "./createAgent";
 import createArticles from "./createArticles";
 import createAuth from "./createAuth";
@@ -12,7 +13,7 @@ const RouterContext = createContext();
 export function Provider(props) {
   let articles, comments, tags, profile, currentUser;
   const router = createRouteHandler(""),
-    [state, setState] = createState({
+    [state, setState] = createStore({
       get articles() {
         return articles();
       },

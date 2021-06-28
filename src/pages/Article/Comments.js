@@ -1,4 +1,4 @@
-import { createState } from "solid-js";
+import { createStore } from "solid-js/store";
 import NavLink from "../../components/NavLink";
 import ListErrors from "../../components/ListErrors";
 import { useStore } from "../../store";
@@ -36,7 +36,7 @@ const Comment = ({ comment, currentUser, onDelete }) => {
 };
 
 const CommentInput = ({ slug, createComment, loadComments, currentUser }) => {
-  const [state, setState] = createState({ body: "" }),
+  const [state, setState] = createSore({ body: "" }),
     handleBodyChange = ev => setState({ body: ev.target.value }),
     createCommentHandler = ev => {
       ev.preventDefault();

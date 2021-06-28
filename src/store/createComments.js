@@ -4,7 +4,7 @@ export default function createComments(agent, actions, state, setState) {
   const [comments, { mutate, refetch }] = createResource(
     () => state.articleSlug,
     agent.Comments.forArticle,
-    []
+    { initialValue: [] }
   );
   Object.assign(actions, {
     loadComments(articleSlug, reload) {

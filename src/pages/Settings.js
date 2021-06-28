@@ -1,10 +1,10 @@
 import { useStore } from "../store";
 import ListErrors from "../components/ListErrors";
-import { createState } from "solid-js";
+import { createStore } from "solid-js/store";
 
 export default () => {
   const [store, { logout, updateUser }] = useStore(),
-    [state, setState] = createState({
+    [state, setState] = createStore({
       image: store.currentUser.image || "",
       username: store.currentUser.username,
       bio: store.currentUser.bio || "",
