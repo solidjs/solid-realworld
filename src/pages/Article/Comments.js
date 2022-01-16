@@ -36,7 +36,7 @@ const Comment = ({ comment, currentUser, onDelete }) => {
 };
 
 const CommentInput = ({ slug, createComment, loadComments, currentUser }) => {
-  const [state, setState] = createSore({ body: "" }),
+  const [state, setState] = createStore({ body: "" }),
     handleBodyChange = ev => setState({ body: ev.target.value }),
     createCommentHandler = ev => {
       ev.preventDefault();

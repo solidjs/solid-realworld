@@ -1,4 +1,4 @@
-const API_ROOT = "https://conduit.productionready.io/api";
+const API_ROOT = "https://api.realworld.io/api";
 
 const encode = encodeURIComponent;
 
