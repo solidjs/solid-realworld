@@ -5,7 +5,7 @@ export default function createArticles(agent, actions, state, setState) {
   const [articleSource, setArticleSource] = createSignal();
   const [articles] = createResource(
     articleSource,
-    (args, prev) => {
+    (args, { value }) => {
       if (args[0] === "articles") {
         return $req(args[1]).then(({ articles, articlesCount }) => {
           queueMicrotask(() => setState({ totalPagesCount: Math.ceil(articlesCount / LIMIT) }));
@@ -16,8 +16,8 @@ export default function createArticles(agent, actions, state, setState) {
         });
       }
       const article = state.articles[args[1]];
-      if (article) return prev();
-      return agent.Articles.get(args[1]).then((article) => ({ ...prev(), [args[1]]: article }));
+      if (article) return value;
+      return agent.Articles.get(args[1]).then((article) => ({ ...value, [args[1]]: article }));
     },
     { initialValue: {} }
   );
