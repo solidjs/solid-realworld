@@ -12,7 +12,7 @@ export default () => {
       password: ""
     }),
     updateState = field => ev => setState(field, ev.target.value),
-    submitForn = ev => {
+    submitForm = ev => {
       ev.preventDefault();
       const user = Object.assign({}, state);
       if (!user.password) delete user.password;
@@ -31,7 +31,7 @@ export default () => {
           <div class="col-md-6 offset-md-3 col-xs-12">
             <h1 class="text-xs-center">Your Settings</h1>
             <ListErrors errors={state.errors} />
-            <form onSubmit={submitForn}>
+            <form onSubmit={submitForm}>
               <fieldset>
                 <fieldset class="form-group">
                   <input
