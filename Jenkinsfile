@@ -28,7 +28,6 @@ pipeline {
             steps {
                 echo "============== Building App to Docker Image =============="
                 sh """
-                    git checkout ${BRANCH_NAME}
                     sudo usermod -aG docker $USER
                     sudo chown $USER /var/run/docker.sock
                     docker build --pull -t ${REGISTRY_NAME}:front_${BRANCH_NAME} .
