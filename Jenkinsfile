@@ -21,14 +21,13 @@ pipeline {
         stage('SCM Checkout') {
             steps {
                 echo "============== SCM Checkout =============="
-                git branch: 'main', credentialsId: 'jenkins_key', url: 'git@github.com:Soubi8/solid-realworld.git'
+                credentialsId: 'jenkins_key', url: 'git@github.com:Soubi8/solid-realworld.git'
             }
         }
         stage('Build Front to Docker Image') {
             steps {
                 echo "============== Building App to Docker Image =============="
                 sh """
-                    echo ${BRANCH_NAME}
                     git checkout ${BRANCH_NAME}
                     sudo usermod -aG docker $USER
                     sudo chown $USER /var/run/docker.sock
