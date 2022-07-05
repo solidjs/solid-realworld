@@ -1,5 +1,10 @@
-FROM node:18-alpine AS front
-WORKDIR /home/js/src
-COPY . /home/js/src/
-EXPOSE 5000
-RUN npm run build && npm run start&
+FROM node:alpine as build
+WORKDIR /app
+COPY ./package.json ./package-lock.json /app/
+RUN npm i
+COPY . /app
+RUN npm run build
+FROM nginx:1.16.0-alpine
+COPY --from=build /app/public /usr/share/nginx/html
+EXPOSE 80
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
