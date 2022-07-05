@@ -6,8 +6,8 @@ pipeline {
         DOCKER_PWD = credentials('docker-pwd')
         DEV = 'https://dev.epam.pp.ua'
         PROD = 'https://epam.pp.ua'
-        IP_DEV = ''
-        IP_PROD = ''
+        IP_DEV = '3.122.251.228'
+        IP_PROD = '18.185.124.88'
         REGISTRY_NAME = 'soubi8/fp'
         APP = 'front'
     }
@@ -21,7 +21,7 @@ pipeline {
         stage('SCM Checkout') {
             steps {
                 echo "============== SCM Checkout =============="
-                git credentialsId: 'jenkins_key', url: 'git@github.com:Soubi8/jenkins-cicd.git'
+                git credentialsId: 'jenkins_key', url: 'git@github.com:Soubi8/solid-realworld.git'
             }
         }
         stage('Build Front to Docker Image') {
