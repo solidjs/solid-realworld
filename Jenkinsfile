@@ -21,7 +21,7 @@ pipeline {
         stage('SCM Checkout') {
             steps {
                 echo "============== SCM Checkout =============="
-                credentialsId: 'jenkins_key', url: 'git@github.com:Soubi8/solid-realworld.git'
+                git credentialsId: 'jenkins_key', url: 'git@github.com:Soubi8/solid-realworld.git'
             }
         }
         stage('Build Front to Docker Image') {
