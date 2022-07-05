@@ -35,7 +35,7 @@ pipeline {
             }
         }
         stage('Push Docker Image') {
-            steps {  // Add credential helper for Docker
+            steps {  // Add credential helper
                 echo "============== Pushing Docker Image to DockerHub =============="
                 sh 'echo "$DOCKER_PWD" | docker login -u soubi8 --password-stdin'
                 sh "docker push ${REGISTRY_NAME}:front_${BRANCH_NAME}"
