@@ -21,6 +21,7 @@ export default function createAuth(agent, actions, setState) {
       batch(() => {
         setState({ token: undefined });
         mutate(undefined);
+        setLoggedIn( false );
       })
     },
     async updateUser(newUser) {
